@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=3 uid="uid://dje7puj25tski"]
+
+[ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="1_fduof"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fduof"]
+size = Vector2(81, 82)
+
+[node name="Hallway1" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(5.96046e-08, 0)
+scale = Vector2(0.664063, 0.664063)
+texture = ExtResource("1_fduof")
+
+[node name="ConnR" type="Marker2D" parent="Sprite2D"]
+position = Vector2(64, -5.27059)
+rotation = 4.71239
+scale = Vector2(1.50588, 1.50588)
+metadata/Occupied = false
+metadata/Nothit = false
+
+[node name="ConnD" type="Marker2D" parent="Sprite2D"]
+position = Vector2(-3.8147e-06, 63.247)
+rotation = 6.28319
+scale = Vector2(1.50588, 1.50588)
+metadata/Occupied = false
+metadata/NotHit = false
+
+[node name="ConnU" type="Marker2D" parent="Sprite2D"]
+position = Vector2(0, -63.247)
+rotation = 3.14159
+scale = Vector2(1.50588, 1.50588)
+metadata/Occupied = false
+metadata/NotHit = false
+
+[node name="ConnL" type="Marker2D" parent="Sprite2D"]
+position = Vector2(-63.247, 1.50588)
+rotation = -4.71239
+scale = Vector2(1.50588, 1.50588)
+metadata/Occupied = false
+metadata/NotHit = false
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_fduof")
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+position = Vector2(1, -41)
+rotation = 3.14159
+scale = Vector2(0.16, 0.16)
+texture = ExtResource("1_fduof")
+
+[node name="Sprite2D4" type="Sprite2D" parent="."]
+position = Vector2(1, 42)
+rotation = 3.14159
+scale = Vector2(0.16, 0.16)
+texture = ExtResource("1_fduof")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(41, -3)
+rotation = 3.14159
+scale = Vector2(0.16, 0.16)
+texture = ExtResource("1_fduof")
