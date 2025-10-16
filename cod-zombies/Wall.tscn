@@ -1,0 +1,98 @@
+[gd_scene load_steps=4 format=3 uid="uid://ck1mp8kgspysi"]
+
+[ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="1_l6igm"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rytl6"]
+texture = ExtResource("1_l6igm")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+7:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+3:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+7:6/0 = 0
+0:7/0 = 0
+1:7/0 = 0
+2:7/0 = 0
+3:7/0 = 0
+4:7/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+7:7/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ywhhs"]
+sources/0 = SubResource("TileSetAtlasSource_rytl6")
+
+[node name="Wall" type="Node2D"]
+
+[node name="Sprite2D" type="TileMap" parent="."]
+position = Vector2(-170, -10)
+tile_set = SubResource("TileSet_ywhhs")
+format = 2
+layer_0/tile_data = PackedInt32Array(65545, 196608, 4, 65547, 196608, 4, 65546, 196608, 4, 65548, 131072, 3)
+
+[node name="Control" type="Control" parent="Sprite2D"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ConnU" type="Marker2D" parent="Sprite2D/Control"]
+position = Vector2(171, 10)
+rotation = 3.14159
+metadata/Occupied = false
+
+[node name="Area2D" type="Area2D" parent="Sprite2D"]
+position = Vector2(162, 82)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/Area2D"]
+polygon = PackedVector2Array(-14, -49, 43, -52, 44, -68, -16, -70)

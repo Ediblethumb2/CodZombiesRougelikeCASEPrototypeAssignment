@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="1_i25ha"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r4a4g"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_i25ha"]
 texture = ExtResource("1_i25ha")
 0:0/0 = 0
 1:0/0 = 0
@@ -70,7 +70,7 @@ texture = ExtResource("1_i25ha")
 7:7/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_4216k"]
-sources/0 = SubResource("TileSetAtlasSource_r4a4g")
+sources/0 = SubResource("TileSetAtlasSource_i25ha")
 
 [node name="DeadEnd" type="Node2D"]
 
@@ -95,4 +95,4 @@ metadata/Occupied = false
 position = Vector2(162, 82)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/Area2D"]
-polygon = PackedVector2Array(-32, -78, -32, -35, -130, -33, -126, 76, 93, 78, 90, -28, 45, -33, 48, -75)
+polygon = PackedVector2Array(-34, -64, -32, -35, -130, -33, -126, 76, 93, 78, 90, -28, 45, -33, 44, -64)
