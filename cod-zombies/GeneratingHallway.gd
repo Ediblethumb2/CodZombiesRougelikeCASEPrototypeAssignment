@@ -20,6 +20,77 @@ var opposite := {
 @onready var Timer2 = Timer.new()
 var markerrunning = false
 var Hallwaydupe = hallways.duplicate()
+var DeadEndDupe = DeadEnds.duplicate()
+
+func _spawn_deadend_at_marker(scene,  marker: Marker2D) -> bool:
+
+	var obj := scene.instantiate() as Node2D
+	
+
+
+	
+			
+	# 1) Map marker name -> opposite connector on the NEW piece
+
+	
+
+	
+	
+	if not opposite.has(marker.name):
+		push_error("Marker must be named ConnR/ConnL/fConnU/ConnD"); obj.queue_free(); return false 
+
+	var new_conn := obj.find_child("ConnU") as Node2D
+	if new_conn == null:
+		#FillMap()
+		return false
+		#push_error("New hallway missing %s" % opposite[marker.name]); obj.queue_free(); 
+	add_child(obj)
+	
+
+		#marker.set_meta("Occupied",true)
+		
+		#return
+
+		
+	var T_marker := Transform2D(marker.global_rotation, marker.global_position)
+	var T_conn   := Transform2D(new_conn.rotation, new_conn.position)
+
+	var R_180    := Transform2D(PI, Vector2.ZERO)  # make connectors face away (butt-join)
+
+	# 3) Place: obj * new_conn_local = marker * 180°
+	var T := T_marker * R_180 * T_conn.affine_inverse()
+
+	# 4) Apply pos/rot only (keep scale)
+	obj.find_child("Sprite2D").global_position = T.origin
+	obj.find_child("Sprite2D").global_rotation = T.get_rotation()
+	obj.scale = Vector2.ONE
+	obj.global_position = obj.global_position.round()
+
+	await get_tree().physics_frame
+	
+
+
+
+	
+	
+
+					
+	if  obj.find_child("Sprite2D").find_child("Area2D").has_overlapping_areas():
+		#new_conn.set_meta("Occupied",false)
+		#if is_instance_valid(marker) and !marker.is_queued_for_deletion():
+			#marker.set_meta("Occupied",false)
+		obj.queue_free()
+		return false
+		
+
+	else:
+		#Successful +=1
+		new_conn.set_meta("Occupied",true)
+		if is_instance_valid(marker):
+			marker.set_meta("Occupied",true)
+		return true
+		
+		
 func _spawn_hallway_at_marker(scene,  marker: Marker2D) -> bool:
 
 	var obj := scene.instantiate() as Node2D
@@ -110,7 +181,7 @@ func FillMap():
 		var canfill = false
 
 		for Hallway in get_children():
-		
+			print("ForLoopRunning")
 		
 			if Hallway.get_class() == "Node2D":
 				canfill = true 
@@ -130,17 +201,41 @@ func FillMap():
 					
 					var scene = Hallwaydupe.pick_random()
 					var placed = await _spawn_hallway_at_marker(scene,marker)
-					
+				
 					if placed == false:
-						print(Hallwaydupe)
+					
 						Hallwaydupe.remove_at(Hallwaydupe.find(scene))
-						print(Hallwaydupe)
 						
-						#while !Hallwaydupe.is_empty():
-							#scene = Hallwaydupe.pick_random()
+						
+						while !Hallwaydupe.is_empty():
+							await  get_tree().physics_frame
+							print("WhileLoopRunning")
+							markerrunning = true
+							scene = Hallwaydupe.pick_random()
+						
+							placed  =  await _spawn_hallway_at_marker(scene,marker)
+							print(Hallwaydupe.size())
+							if placed == false && Hallwaydupe.size() > 0:
 							
-							#placed  =  await _spawn_hallway_at_marker(scene,marker)
-							#if placed:
+								print(Hallwaydupe.size())
+								Hallwaydupe.remove_at(Hallwaydupe.find(scene))
+							if placed:
+								markerrunning = false
+								break
+							if Hallwaydupe.size() == 0:
+								marker.set_meta("Occupied",true)
+								markerrunning = false
+								DeadEndDupe = DeadEnds.duplicate()
+								var DeadEndScene = DeadEndDupe.pick_random()
+								var DeadEndPlaced = await _spawn_deadend_at_marker(DeadEndScene,marker)
+								if DeadEndPlaced == false && DeadEndDupe.size() > 0:
+									DeadEndDupe.remove_at(DeadEndDupe.find(DeadEndScene))
+								if DeadEndPlaced:
+									break
+								
+									
+								break
+								
 								
 						
 					break
@@ -185,54 +280,19 @@ func _on_timer_timeout() -> void:
 func rungeneration():
 	while Successful < 50:
 		if markerrunning == false:
-			FillMap()
+			print("aaaaaaaaaaaa")
+			await FillMap()
 			await get_tree().physics_frame
 	var children = get_children()
 	for Hallway in  range(children.size()):
 				
 				
 		if is_instance_valid(children[Hallway]) && children[Hallway].get_class() == "Node2D":
-					
+			
 			var markerrr = children[Hallway].find_child("Sprite2D").find_child("Control").get_children()
 			for mark in markerrr:
 				if mark.get_meta("Occupied") == false:
-					var obj :=DeadEnd.instantiate() as Node2D
-					var new_conn := obj.find_child("ConnU") as Node2D
-					if new_conn == null:
-								#FillMap()
-						return
-								#push_error("New hallway missing %s" % opposite[marker.name]); obj.queue_free(); 
-						add_child(obj)
-
-
-								#marker.set_meta("Occupied",true)
-								
-								#return
-							
-					var T_marker := Transform2D(mark.global_rotation, mark.global_position)
-					var T_conn   := Transform2D(new_conn.rotation, new_conn.position)
-					var R_180    := Transform2D(PI, Vector2.ZERO)  # make connectors face away (butt-join)
-
-							# 3) Place: obj * new_conn_local = marker * 180°
-					var T := T_marker * R_180 * T_conn.affine_inverse()
-
-							# 4) Apply pos/rot only (keep scale)
-					obj.find_child("Sprite2D").global_position = T.origin
-					obj.find_child("Sprite2D").global_rotation = T.get_rotation()
-					obj.scale = Vector2.ONE
-					await get_tree().physics_frame
-						
-							
-							
-							
-									
-											
-					if  obj.find_child("Sprite2D").find_child("Area2D").has_overlapping_areas():
-						obj.queue_free()
-						mark.set_meta("Occupied",true)
-						break
-							
-
+					pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	#FillMap()

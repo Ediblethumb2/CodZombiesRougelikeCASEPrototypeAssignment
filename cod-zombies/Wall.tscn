@@ -90,6 +90,7 @@ offset_bottom = 40.0
 position = Vector2(171, 10)
 rotation = 3.14159
 metadata/Occupied = false
+metadata/DeadEnd = false
 
 [node name="Area2D" type="Area2D" parent="Sprite2D"]
 position = Vector2(162, 82)
