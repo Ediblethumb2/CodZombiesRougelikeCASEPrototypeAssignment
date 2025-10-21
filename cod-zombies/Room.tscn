@@ -1,11 +1,7 @@
-[gd_scene load_steps=17 format=4 uid="uid://bd68wc2cr5l7b"]
+[gd_scene load_steps=5 format=4 uid="uid://bd68wc2cr5l7b"]
 
 [ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_hgg63"]
-[ext_resource type="Script" uid="uid://ucua3301rx7f" path="res://character_body_2d.gd" id="2_vbd26"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="3_axjh2"]
-[ext_resource type="PackedScene" uid="uid://c7rsvrxnevbve" path="res://AssaultRifle.tscn" id="4_4v3hs"]
-[ext_resource type="PackedScene" uid="uid://uj72xmt2oulj" path="res://Pistol.tscn" id="5_yc6jp"]
-[ext_resource type="Texture2D" uid="uid://v3lybqdtrxop" path="res://Player_Knight_SpriteSheet.png" id="6_1kin1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6vgh5"]
 texture = ExtResource("1_hgg63")
@@ -2277,92 +2273,34 @@ texture_region_size = Vector2i(64, 64)
 tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetAtlasSource_6vgh5")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_yhffv"]
-size = Vector2(118, 131)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kdubu"]
-atlas = ExtResource("6_1kin1")
-region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d21ai"]
-atlas = ExtResource("6_1kin1")
-region = Rect2(16, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rj586"]
-atlas = ExtResource("6_1kin1")
-region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4d7sh"]
-atlas = ExtResource("6_1kin1")
-region = Rect2(16, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ir8iy"]
-atlas = ExtResource("6_1kin1")
-region = Rect2(32, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hqns4"]
-atlas = ExtResource("6_1kin1")
-region = Rect2(48, 16, 16, 16)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_01do0"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kdubu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d21ai")
-}],
-"loop": true,
-"name": &"Idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rj586")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4d7sh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ir8iy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hqns4")
-}],
-"loop": true,
-"name": &"Move",
-"speed": 5.0
-}]
-
 [node name="Node2D" type="Node2D"]
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAD9////AAACAAIAAAD9/wAAAAACAAMAAAD+////AAADAAIAAAD+/wAAAAADAAMAAAD/////AAAEAAIAAAD//wAAAAAEAAMAAAAAAP//AAAFAAIAAAAAAAAAAAAFAAMAAAABAP//AAACAAIAAAABAAAAAAACAAMAAAACAP//AAADAAIAAAACAAAAAAADAAMAAAADAP//AAAEAAIAAAADAAAAAAAEAAMAAAAEAP//AAAFAAIAAAAEAAAAAAAFAAMAAAABAAEAAAACAAIAAAABAAIAAAACAAMAAAACAAEAAAADAAIAAAACAAIAAAADAAMAAAADAAEAAAAEAAIAAAADAAIAAAAEAAMAAAAEAAEAAAAFAAIAAAAEAAIAAAAFAAMAAAD9/wEAAAACAAIAAAD9/wIAAAACAAMAAAD+/wEAAAADAAIAAAD+/wIAAAADAAMAAAD//wEAAAAEAAIAAAD//wIAAAAEAAMAAAAAAAEAAAAFAAIAAAAAAAIAAAAFAAMAAAD9//7/AAACAAEAAAD+//7/AAADAAEAAAD///7/AAAEAAEAAAAAAP7/AAAFAAEAAAABAP7/AAACAAEAAAACAP7/AAADAAEAAAADAP7/AAAEAAEAAAAEAP7/AAAFAAEAAAA=")
+[node name="RoomLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD9////AAACAAIAAAD9/wAAAAACAAMAAAD+////AAADAAIAAAD+/wAAAAADAAMAAAD/////AAAEAAIAAAD//wAAAAAEAAMAAAAAAP//AAAFAAIAAAAAAAAAAAAFAAMAAAABAP//AAACAAIAAAABAAAAAAACAAMAAAACAP//AAADAAIAAAACAAAAAAADAAMAAAADAP//AAAEAAIAAAADAAAAAAAEAAMAAAAEAP//AAAFAAIAAAAEAAAAAAAFAAMAAAABAAEAAAACAAIAAAABAAIAAAACAAMAAAACAAEAAAADAAIAAAACAAIAAAADAAMAAAADAAEAAAAEAAIAAAADAAIAAAAEAAMAAAAEAAEAAAAFAAIAAAAEAAIAAAAFAAMAAAD9/wEAAAACAAIAAAD9/wIAAAACAAMAAAD+/wEAAAADAAIAAAD+/wIAAAADAAMAAAD//wEAAAAEAAIAAAD//wIAAAAEAAMAAAAAAAEAAAAFAAIAAAAAAAIAAAAFAAMAAAD9//7/AAACAAEAAAD+//7/AAADAAEAAAD///7/AAAEAAEAAAAAAP7/AAAFAAEAAAABAP7/AAACAAEAAAACAP7/AAADAAEAAAAEAP7/AAAFAAEAAAAFAP7/AAANAAEAAAAFAP//AAANAAIAAAAFAAAAAAANAAMAAAAFAAEAAAANAAEAAAAFAAIAAAANAAIAAAAFAAMAAAANAAEAAAAEAAMAAAANAAgAAAD8/wMAAAAKAAgAAAD9/wMAAAALAAgAAAD+/wMAAAAMAAgAAAD//wMAAAAIAAgAAAAAAAMAAAAJAAgAAAABAAMAAAAKAAgAAAACAAMAAAALAAgAAAADAAMAAAAMAAgAAAD8/wAAAAAAAAIAAAD8/wEAAAAAAAMAAAD8/wIAAAAAAAQAAAD8//7/AAAAAAEAAAA=")
 tile_set = SubResource("TileSet_hwkqq")
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
-position = Vector2(98, -69)
-script = ExtResource("2_vbd26")
+[node name="Control" type="Control" parent="RoomLayer"]
+layout_mode = 3
+anchors_preset = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-position = Vector2(1, 4)
-scale = Vector2(1, 0.84)
-shape = SubResource("RectangleShape2D_yhffv")
+[node name="Marker2D" type="Marker2D" parent="RoomLayer/Control"]
+position = Vector2(-256, -32)
+rotation = 1.5708
+metadata/Occupied = false
 
-[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-visible = false
+[node name="Sprite2D" type="Sprite2D" parent="RoomLayer/Control/Marker2D"]
+scale = Vector2(0.1, 0.2)
 texture = ExtResource("3_axjh2")
 
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
-position = Vector2(-98, 69)
-zoom = Vector2(0.5, 0.5)
+[node name="Marker2D2" type="Marker2D" parent="RoomLayer/Control"]
+position = Vector2(224, -128)
+rotation = 3.14159
+metadata/Occupied = false
 
-[node name="AssaultRifle" parent="CharacterBody2D" instance=ExtResource("4_4v3hs")]
+[node name="Sprite2D2" type="Sprite2D" parent="RoomLayer/Control/Marker2D2"]
+rotation = -1.5708
+scale = Vector2(0.1, 0.2)
+texture = ExtResource("3_axjh2")
 
-[node name="Pistol" parent="CharacterBody2D" instance=ExtResource("5_yc6jp")]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
-scale = Vector2(3, 3)
-sprite_frames = SubResource("SpriteFrames_01do0")
-animation = &"Move"
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer"]
+polygon = PackedVector2Array(367, -105, 372, 240, -238, 236, -236, 15, -193, 2, -192, -69, -247, -75, -244, -115, 183, -113, 191, -64, 257, -63, 266, -107)

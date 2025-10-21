@@ -94,7 +94,7 @@ zoom = Vector2(0.5, 0.5)
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_x0ka3")
 animation = &"Move"
-frame_progress = 0.858383
+frame_progress = 0.749484
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(186, 140)

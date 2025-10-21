@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://d1bihu653no2k"]
+[gd_scene load_steps=8 format=3 uid="uid://d1bihu653no2k"]
 
 [ext_resource type="Script" uid="uid://db05blelomyik" path="res://Map.gd" id="1_wijl4"]
 [ext_resource type="Script" uid="uid://ucua3301rx7f" path="res://character_body_2d.gd" id="3_iw27f"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="4_71pa8"]
 [ext_resource type="PackedScene" uid="uid://c7rsvrxnevbve" path="res://AssaultRifle.tscn" id="5_05x41"]
 [ext_resource type="PackedScene" uid="uid://uj72xmt2oulj" path="res://Pistol.tscn" id="6_gqbix"]
+[ext_resource type="PackedScene" uid="uid://bd68wc2cr5l7b" path="res://Room.tscn" id="6_iw27f"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_oysan"]
 size = Vector2(118, 131)
@@ -14,7 +15,7 @@ position = Vector2(10, -67)
 script = ExtResource("1_wijl4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.1, 0.1)
+zoom = Vector2(0.5, 0.5)
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 position = Vector2(98, -69)
@@ -30,7 +31,6 @@ texture = ExtResource("4_71pa8")
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
 position = Vector2(-98, 69)
-zoom = Vector2(0.5, 0.5)
 
 [node name="AssaultRifle" parent="CharacterBody2D" instance=ExtResource("5_05x41")]
 
@@ -38,3 +38,5 @@ zoom = Vector2(0.5, 0.5)
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(0.937778, 0.000801281, 0.951342, 1)
+
+[node name="Node2D" parent="." instance=ExtResource("6_iw27f")]

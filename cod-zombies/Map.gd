@@ -1,17 +1,13 @@
 extends Node2D
 
-var hallway1 = preload("res://hallway_1.tscn")
-var hallway2 = preload("res://hallway_2.tscn")
-var hallway3 = preload("res://hallway_3.tscn")
-var hallway4 = preload("res://Hallway4.tscn")
-var DeadEnd = preload("res://DeadEnd.tscn")
-var Room = preload("res://room.tscn")
-var Wall = preload("res://Wall.tscn")
-var hallways = [DeadEnd,Room,hallway3,hallway4]
 
-var Polygons = [DeadEnd.instantiate().find_child("Sprite2D").find_child("CollisionPolygon2D").polygon,Room.instantiate().find_child("Sprite2D").find_child("CollisionPolygon2D").polygon,hallway3.instantiate().find_child("Sprite2D").find_child("CollisionPolygon2D").polygon,hallway4.instantiate().find_child("Sprite2D").find_child("CollisionPolygon2D").polygon,DeadEnd.instantiate().find_child("Sprite2D").find_child("CollisionPolygon2D").polygon]
+var Room = preload("res://Room.tscn")
+
+var hallways = [Room]
+
+var Polygons =[Room.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
 @onready var Polygon2Dd = get_node("Polygon2D")
-var DeadEnds = [Wall,DeadEnd]
+
 
 var clause = 1    # kevin
 
@@ -59,7 +55,7 @@ var overlapped = false
 var points = []
 var drawable  = false
 func _draw() -> void:
-#	var Hallwayy = Rect2(find_child("Hallway3").find_child(	"Sprite2D").global_position.x - 170,find_child("Hallway3").find_child(	"Sprite2D").global_position.y + 150,260,260)
+#	var Hallwayy = Rect2(find_child("Hallway3").find_child(	"RoomLayer").global_position.x - 170,find_child("Hallway3").find_child(	"RoomLayer").global_position.y + 150,260,260)
 		queue_redraw()
 		if drawable == true:
 			Polygon2Dd.polygon = points
@@ -80,7 +76,7 @@ func FillMap() -> void:
 		if not (Hallway is Node2D):
 			continue
 
-		var control := Hallway.get_node("Sprite2D/Control")
+		var control := Hallway.get_node("RoomLayer/Control")
 		if control == null:
 			continue
 
@@ -99,7 +95,7 @@ func FillMap() -> void:
 		var obj := room_packed.instantiate() as Node2D
 
 		# pick a free connector on the new room
-		var new_ctrl := obj.find_child("Sprite2D").find_child("Control")
+		var new_ctrl := obj.find_child("RoomLayer").find_child("Control")
 		var free_conns : Array[Node2D] = []
 		for c in new_ctrl.get_children():
 			if not c.get_meta("Occupied", false):
@@ -110,19 +106,20 @@ func FillMap() -> void:
 		var new_conn : Node2D = free_conns.pick_random()
 
 		# compute transform to glue connectors (180° flip)
-		var T_marker := Transform2D(marker.global_rotation, marker.global_position)
+		var T_marker := Transform2D(marker.global_rotation, marker.global_position + Vector2(0,70))
+		
 	
 		var T_conn   := Transform2D(new_conn.rotation, new_conn.position)
 		var R_180    := Transform2D(PI, Vector2.ZERO)
-		var T := T_marker * R_180 * T_conn.affine_inverse()
+		var T_roomlayer := T_marker * R_180 * T_conn.affine_inverse()
 		# collision polygon in world-space
 		var local_poly : PackedVector2Array = Polygons[hallways.find(room_packed)]
-		var world_poly := _xform_poly(T, local_poly)
+		var world_poly := _xform_poly(T_roomlayer, local_poly)
 
 		# overlap test against all placed polys
 		var overlaps := false
 		points = world_poly
-		Polygon2Dd.reparent(Hallway.find_child("Sprite2D"))
+		Polygon2Dd.reparent(Hallway.find_child("RoomLayer"))
 		drawable = true
 		_draw()
 		for placed in Rects:
@@ -137,12 +134,13 @@ func FillMap() -> void:
 			break
 
 		# place it
-		obj.find_child("Sprite2D").global_position = T.origin
-		obj.find_child("Sprite2D").global_rotation = T.get_rotation()
+		obj.find_child("RoomLayer").global_position = T_roomlayer.origin
+	
+		obj.find_child("RoomLayer").global_rotation = T_roomlayer.get_rotation()
 		obj.scale = Vector2.ONE
 
 		# add to tree deferred (avoid mid-iteration churn) & update caches
-		call_deferred("add_child", obj)
+		add_child(obj)
 		Rects.append(world_poly)
 		successfulrooms += 1
 
@@ -151,30 +149,6 @@ func FillMap() -> void:
 		_spawning = false 
 		break  # only one placement per FillMap() call
 
-					#ActualHallwayDupe.remove_at(ActualHallwayDupe.find(room))
-					#while !ActualHallwayDupe.is_empty():
-						#await  get_tree().physics_frame
-					#	markerrunning = true
-						#room = ActualHallwayDupe.pick_random()
-						#obj = room.instantiate() as Node2D
-						#new_conn = obj.find_child("Sprite2D").find_child("Control").get_children().pick_random() as Node2D
-					#	T_marker = Transform2D(marker.global_rotation, marker.global_position)
-						#T_conn   = Transform2D(new_conn.rotation, new_conn.position)
-					#	R_180    = Transform2D(PI, Vector2.ZERO)
-						#T = T_marker * R_180 * T_conn.affine_inverse()
-						#local_poly = obj.find_child("Sprite2D").find_child("CollisionPolygon2D").polygon
-						##world_poly = _xform_poly(T,local_poly)
-						#for rect in Rects:
-							#if _polys_overlap(rect,world_poly):
-							#	overlapped = true
-							#	obj.queue_free()
-							#	ActualHallwayDupe.remove_at(ActualHallwayDupe.find(room))
-							#	break
-						#if ActualHallwayDupe.size() == 0:
-							#marker.set_meta("Occupied",true)
-						#	marker.set_meta("DeadEnd",true)
-						#	break
-								
 			
 
 						
