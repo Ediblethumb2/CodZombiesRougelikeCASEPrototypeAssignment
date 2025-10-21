@@ -73,12 +73,13 @@ texture = ExtResource("1_i25ha")
 sources/0 = SubResource("TileSetAtlasSource_i25ha")
 
 [node name="DeadEnd" type="Node2D"]
+metadata/Level = 0.0
 
 [node name="Sprite2D" type="TileMap" parent="."]
 position = Vector2(-162, -82)
 tile_set = SubResource("TileSet_4216k")
 format = 2
-layer_0/tile_data = PackedInt32Array(196610, 65536, 1, 262146, 65536, 1, 327682, 65536, 1, 393218, 65536, 1, 458754, 65536, 1, 524290, 65536, 1, 589826, 65536, 1, 589827, 65536, 1, 589828, 65536, 1, 589829, 65536, 1, 589830, 65536, 1, 589831, 65536, 1, 589832, 65536, 1, 589833, 65536, 1, 589834, 65536, 1, 589835, 65536, 1, 589836, 65536, 1, 589837, 65536, 1, 589838, 65536, 1, 524302, 65536, 1, 524303, 65536, 1, 458767, 65536, 1, 393231, 65536, 1, 327695, 65536, 1, 262159, 65536, 1, 589839, 65536, 1, 196623, 65536, 1, 196622, 65536, 1, 196621, 65536, 1, 196620, 65536, 1, 131084, 65536, 1, 65548, 65536, 1, 12, 65536, 1, 196611, 65536, 1, 196612, 65536, 1, 196613, 65536, 1, 196614, 65536, 1, 196615, 65536, 1, 196616, 65536, 1, 131080, 65536, 1, 65544, 65536, 1, 8, 65536, 1)
+layer_0/tile_data = PackedInt32Array(196610, 65536, 1, 262146, 65536, 1, 327682, 65536, 1, 393218, 65536, 1, 458754, 65536, 1, 524290, 65536, 1, 589834, 65536, 1, 589835, 65536, 1, 589836, 65536, 1, 589837, 65536, 1, 589838, 65536, 1, 524302, 65536, 1, 524303, 65536, 1, 458767, 65536, 1, 393231, 65536, 1, 327695, 65536, 1, 262159, 65536, 1, 589839, 65536, 1, 196623, 65536, 1, 196622, 65536, 1, 196621, 65536, 1, 196620, 65536, 1, 131084, 65536, 1, 65548, 65536, 1, 12, 65536, 1, 196611, 65536, 1, 196612, 65536, 1, 196613, 65536, 1, 196614, 65536, 1, 196615, 65536, 1, 196616, 65536, 1, 131080, 65536, 1, 65544, 65536, 1, 8, 65536, 1, 589833, 131072, 1, 589832, 131072, 1, 589831, 131072, 1, 589826, 131072, 1, 589827, 131072, 1)
 
 [node name="Control" type="Control" parent="Sprite2D"]
 layout_mode = 3
@@ -92,8 +93,20 @@ rotation = 3.14159
 metadata/Occupied = false
 metadata/DeadEnd = false
 
-[node name="Area2D" type="Area2D" parent="Sprite2D"]
-position = Vector2(162, 82)
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Control/ConnU"]
+rotation = -3.14159
+scale = Vector2(0.229613, 0.198364)
+texture = ExtResource("1_i25ha")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/Area2D"]
-polygon = PackedVector2Array(-34, -64, -32, -35, -130, -33, -126, 76, 93, 78, 90, -28, 45, -33, 44, -64)
+[node name="ConnD" type="Marker2D" parent="Sprite2D/Control"]
+position = Vector2(90, 153)
+metadata/Occupied = false
+metadata/DeadEnd = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Control/ConnD"]
+rotation = -3.14159
+scale = Vector2(0.206931, 0.206931)
+texture = ExtResource("1_i25ha")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D"]
+polygon = PackedVector2Array(128, 8, 128, 50, 33, 49, 32, 157, 62, 151, 73, 140, 110, 140, 117, 150, 255, 158, 256, 45, 206, 47, 208, 9, 174, 9)

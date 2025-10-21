@@ -1,12 +1,68 @@
-[gd_scene load_steps=7 format=3 uid="uid://cnetsqw6186fh"]
+[gd_scene load_steps=15 format=3 uid="uid://cnetsqw6186fh"]
 
 [ext_resource type="Script" uid="uid://ucua3301rx7f" path="res://character_body_2d.gd" id="1_0e48y"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="1_wtcfe"]
 [ext_resource type="PackedScene" uid="uid://c7rsvrxnevbve" path="res://AssaultRifle.tscn" id="3_epypp"]
 [ext_resource type="PackedScene" uid="uid://uj72xmt2oulj" path="res://Pistol.tscn" id="4_0hol4"]
+[ext_resource type="Texture2D" uid="uid://v3lybqdtrxop" path="res://Player_Knight_SpriteSheet.png" id="5_q6r6c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wtcfe"]
 size = Vector2(118, 131)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdubu"]
+atlas = ExtResource("5_q6r6c")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d21ai"]
+atlas = ExtResource("5_q6r6c")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rj586"]
+atlas = ExtResource("5_q6r6c")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4d7sh"]
+atlas = ExtResource("5_q6r6c")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ir8iy"]
+atlas = ExtResource("5_q6r6c")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqns4"]
+atlas = ExtResource("5_q6r6c")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x0ka3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kdubu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d21ai")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rj586")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4d7sh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ir8iy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hqns4")
+}],
+"loop": true,
+"name": &"Move",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0e48y"]
 size = Vector2(424, 186)
@@ -23,6 +79,7 @@ scale = Vector2(1, 0.84)
 shape = SubResource("RectangleShape2D_wtcfe")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+visible = false
 texture = ExtResource("1_wtcfe")
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
@@ -32,6 +89,12 @@ zoom = Vector2(0.5, 0.5)
 [node name="AssaultRifle" parent="CharacterBody2D" instance=ExtResource("3_epypp")]
 
 [node name="Pistol" parent="CharacterBody2D" instance=ExtResource("4_0hol4")]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_x0ka3")
+animation = &"Move"
+frame_progress = 0.858383
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(186, 140)

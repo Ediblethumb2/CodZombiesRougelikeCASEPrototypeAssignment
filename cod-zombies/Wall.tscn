@@ -94,6 +94,5 @@ metadata/DeadEnd = false
 
 [node name="Area2D" type="Area2D" parent="Sprite2D"]
 position = Vector2(162, 82)
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/Area2D"]
-polygon = PackedVector2Array(-14, -49, 43, -52, 44, -68, -16, -70)
+monitoring = false
+monitorable = false

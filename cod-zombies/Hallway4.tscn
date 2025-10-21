@@ -72,13 +72,15 @@ texture = ExtResource("1_sjb5u")
 [sub_resource type="TileSet" id="TileSet_1541l"]
 sources/0 = SubResource("TileSetAtlasSource_y43vm")
 
-[node name="Node2D" type="Node2D"]
+[node name="Hallway4" type="Node2D"]
+metadata/Level = 0.0
 
 [node name="Sprite2D" type="TileMap" parent="."]
-position = Vector2(-31, -224)
+position = Vector2(-27, -196)
 tile_set = SubResource("TileSet_1541l")
 format = 2
 layer_0/tile_data = PackedInt32Array(65535, 131072, 4, 131071, 131072, 4, 196607, 131072, 4, 262143, 131072, 4, 327679, 131072, 4, 393215, 131072, 4, 458751, 131072, 4, 524287, 131072, 4, 589823, 131072, 4, 655359, 131072, 4, 720895, 131072, 4, 720894, 131072, 4, 720893, 131072, 4, 720892, 131072, 4, 720891, 131072, 4, 720890, 131072, 4, 720889, 131072, 4, 720888, 131072, 4, 3, 131072, 4, 65539, 131072, 4, 131075, 131072, 4, 196611, 131072, 4, 262147, 131072, 4, 327683, 131072, 4, 393219, 131072, 4, 458755, 131072, 4, 524291, 131072, 4, 589827, 131072, 4, 655363, 131072, 4, 655364, 131072, 4, 655365, 131072, 4, 655366, 131072, 4, 655367, 131072, 4, 655368, 131072, 4, 655369, 131072, 4, 655370, 131072, 4, 655371, 131072, 4, 655372, 131072, 4, 655373, 131072, 4, 1703935, 131072, 4, 1638399, 131072, 4, 1572863, 131072, 4, 1507327, 131072, 4, 1441791, 131072, 4, 1376255, 131072, 4, 1310719, 131072, 4, 1245183, 131072, 4, 1179647, 131072, 4, 1114111, 131072, 4, 1048575, 131072, 4, 983039, 131072, 4, 983038, 131072, 4, 983037, 131072, 4, 983036, 131072, 4, 983035, 131072, 4, 983034, 131072, 4, 983033, 131072, 4, 983032, 131072, 4, 1638403, 131072, 4, 1572867, 131072, 4, 1507331, 131072, 4, 1441795, 131072, 4, 1376259, 131072, 4, 1310723, 131072, 4, 1245187, 131072, 4, 1179651, 131072, 4, 1114115, 131072, 4, 1048579, 131072, 4, 983043, 131072, 4, 917507, 131072, 4, 917508, 131072, 4, 917509, 131072, 4, 917510, 131072, 4, 917511, 131072, 4, 917512, 131072, 4, 917513, 131072, 4, 917514, 131072, 4, 917515, 131072, 4, 917516, 131072, 4, 917517, 131072, 4)
+metadata/Room = false
 
 [node name="Control" type="Control" parent="Sprite2D"]
 layout_mode = 3
@@ -91,26 +93,49 @@ position = Vector2(225, 199)
 rotation = -1.5708
 metadata/Occupied = false
 metadata/DeadEnd = false
+metadata/Locked = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Control/ConnR"]
+scale = Vector2(0.125425, 0.166511)
+texture = ExtResource("1_sjb5u")
 
 [node name="ConnL" type="Marker2D" parent="Sprite2D/Control"]
 position = Vector2(-128, 199)
 rotation = 1.5708
 metadata/Occupied = false
 metadata/DeadEnd = false
+metadata/Locked = false
+
+[node name="Sprite2D2" type="Sprite2D" parent="Sprite2D/Control/ConnL"]
+rotation = 1.5708
+scale = Vector2(0.125425, 0.166511)
+texture = ExtResource("1_sjb5u")
 
 [node name="ConnU" type="Marker2D" parent="Sprite2D/Control"]
-position = Vector2(22, 1)
+position = Vector2(27, 0)
 rotation = -3.14159
 metadata/Occupied = false
 metadata/DeadEnd = false
+metadata/Locked = false
+
+[node name="Sprite2D3" type="Sprite2D" parent="Sprite2D/Control/ConnU"]
+position = Vector2(-5, 1.26759e-05)
+scale = Vector2(0.125425, 0.166511)
+texture = ExtResource("1_sjb5u")
 
 [node name="ConnD" type="Marker2D" parent="Sprite2D/Control"]
 position = Vector2(22, 418)
 metadata/Occupied = false
 metadata/DeadEnd = false
+metadata/Locked = false
+
+[node name="Sprite2D4" type="Sprite2D" parent="Sprite2D/Control/ConnD"]
+rotation = -3.14159
+scale = Vector2(0.125425, 0.166511)
+texture = ExtResource("1_sjb5u")
 
 [node name="Area2D" type="Area2D" parent="Sprite2D"]
 position = Vector2(-4, 17)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/Area2D"]
-polygon = PackedVector2Array(-13, -6, -14, 142, -107, 147, -107, 217, -11, 218, -14, 381, 67, 384, 59, 219, 214, 220, 218, 151, 69, 143, 68, -2)
+polygon = PackedVector2Array(-11, 5, -14, 142, -108, 148, -108, 216, -11, 218, -10, 376, 66, 379, 59, 219, 209, 224, 209, 145, 69, 143, 66, 7)
