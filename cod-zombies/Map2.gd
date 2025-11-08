@@ -48,7 +48,7 @@ func _draw() -> void:
 	draw_circle(pts[pts.size()-1], 6.0, Color(1,1,0))
 func _input(InputEvent) -> void:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			pass
+			FillMap()
 			#FillDeadEnd()
 @onready var Rects = [$Node2D/RoomLayer/CollisionPolygon2D.polygon]
 var opposite := {
@@ -120,9 +120,10 @@ func FillDeadEnd():
 			continue
 		
 		var marker : Node2D = free_markers.pick_random()
+		
 
 		# pick a room/hallway scene
-
+		
 
 		# pick a free connector on the new room
 
@@ -174,7 +175,7 @@ func FillDeadEnd():
 				marker.set_meta("Searchable",true)
 			
 				obj.queue_free()
-				print("FUCKOFFFFFF")
+			
 				DeadEndDupe.erase(DeadEndDupe.find(room_packed))
 				PolygonsDeadEndsDupe.erase(DeadEndDupe.find(room_packed))
 				continue
@@ -184,9 +185,9 @@ func FillDeadEnd():
 			obj.find_child("RoomLayer").global_position = T_roomlayer.origin
 		
 			obj.find_child("RoomLayer").global_rotation = T_roomlayer.get_rotation()
-			print(obj.name)
+			
 			obj.scale = Vector2.ONE
-			print("aaaa")
+			
 			# add to tree deferred (avoid mid-iteration churn) & update caches
 			add_child(obj)
 			SuccessfulDeadEnds += 1
@@ -266,10 +267,11 @@ func FillMap() -> void:
 				# compute transform to glue connectors (180° flip)
 					var T_marker := Transform2D(marker.global_rotation, marker.global_position)
 					
-				
+
 					var T_conn   := Transform2D(new_conn.rotation, new_conn.position)
 					var R_180    := Transform2D(PI, Vector2.ZERO)
 					var T_roomlayer := T_marker * R_180 * T_conn.affine_inverse()
+					
 					# collision polygon in world-space
 					var local_poly : PackedVector2Array = SpecialRoomObj.find_child("RoomLayer").find_child("CollisionPolygon2D").polygon
 					var world_poly := _xform_poly(T_roomlayer, local_poly)
@@ -281,7 +283,7 @@ func FillMap() -> void:
 					Polygon2Dd.polygon = points
 					drawable = true
 					
-				
+					
 					for placed in Rects:
 					
 						if _polys_overlap(placed, world_poly):
@@ -305,7 +307,7 @@ func FillMap() -> void:
 						SpecialRoomObj.find_child("RoomLayer").global_rotation = T_roomlayer.get_rotation()
 				
 						SpecialRoomObj.scale = Vector2.ONE
-						print("aaaa")
+						
 						# add to tree deferred (avoid mid-iteration churn) & update caches
 						add_child(SpecialRoomObj)
 						CollisionShapeRects.append(SpecialRoomObj.find_child("RoomLayer"))
@@ -404,7 +406,6 @@ func FillMap() -> void:
 				break  # only one placement per FillMap() call
 			
 					
-
 				
 		if SpecialRoomPlacing == false:
 			while HallwayDupe.size() > 0:
@@ -456,13 +457,19 @@ func FillMap() -> void:
 					marker.set_meta("Searchable",true)
 				
 					obj.queue_free()
-					print("FUCKOFFFFFF")
+			
 					HallwayDupe.erase(room_packed)
 					HallwayDupePolygons.erase(local_poly)
 					continue
 					
 
 				# place it
+				var fwd := Vector2.RIGHT.rotated(marker.global_rotation)
+				if fwd.y == 1:
+					print("cgewuc	")
+					T_roomlayer.origin += Vector2(-8,0)
+								
+					
 				obj.find_child("RoomLayer").global_position = T_roomlayer.origin
 			
 				obj.find_child("RoomLayer").global_rotation = T_roomlayer.get_rotation()
@@ -474,7 +481,8 @@ func FillMap() -> void:
 				CollisionShapeRects.append(SpecialRoomObj.find_child("RoomLayer"))
 				Rects.append(world_poly)
 				successfulrooms += 1
-				
+
+					
 				marker.set_meta("Occupied", true)
 				marker.set_meta("Searchable",false)
 				new_conn.set_meta("Occupied", true)
@@ -502,8 +510,8 @@ var region =  null
 var SuccessfulDeadEnds = 0
 func _process(delta: float) -> void:
 	if successfulrooms < 100:
-		
-		FillMap()
+		pass
+		#FillMap()
 	
 		
 	else:

@@ -1,42 +1,54 @@
-[gd_scene load_steps=8 format=3 uid="uid://d1bihu653no2k"]
+[gd_scene load_steps=7 format=3 uid="uid://d1bihu653no2k"]
 
-[ext_resource type="Script" uid="uid://db05blelomyik" path="res://Map.gd" id="1_wijl4"]
-[ext_resource type="Script" uid="uid://ucua3301rx7f" path="res://character_body_2d.gd" id="3_iw27f"]
-[ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="4_71pa8"]
-[ext_resource type="PackedScene" uid="uid://c7rsvrxnevbve" path="res://AssaultRifle.tscn" id="5_05x41"]
-[ext_resource type="PackedScene" uid="uid://uj72xmt2oulj" path="res://Pistol.tscn" id="6_gqbix"]
-[ext_resource type="PackedScene" uid="uid://bd68wc2cr5l7b" path="res://Room.tscn" id="6_iw27f"]
+[ext_resource type="Script" uid="uid://db05blelomyik" path="res://Map.gd" id="1_3h1ab"]
+[ext_resource type="PackedScene" uid="uid://cdbpvj4aiv3yy" path="res://Hallway4Way.tscn" id="3_7if1s"]
+[ext_resource type="Script" uid="uid://is4fj30aliwi" path="res://BasicEnemy.gd" id="4_v6avs"]
+[ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="5_8qak7"]
+[ext_resource type="PackedScene" uid="uid://cux2yq5vrwnck" path="res://Player.tscn" id="5_v6avs"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_oysan"]
-size = Vector2(118, 131)
+[sub_resource type="CircleShape2D" id="CircleShape2D_0f2yp"]
+radius = 26.0
 
-[node name="Map" type="Node2D"]
-position = Vector2(10, -67)
-script = ExtResource("1_wijl4")
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_3h1ab")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
-position = Vector2(98, -69)
-script = ExtResource("3_iw27f")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-position = Vector2(1, 4)
-scale = Vector2(1, 0.84)
-shape = SubResource("RectangleShape2D_oysan")
-
-[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-texture = ExtResource("4_71pa8")
-
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
-position = Vector2(-98, 69)
-
-[node name="AssaultRifle" parent="CharacterBody2D" instance=ExtResource("5_05x41")]
-
-[node name="Pistol" parent="CharacterBody2D" instance=ExtResource("6_gqbix")]
+[node name="Node2D" parent="." instance=ExtResource("3_7if1s")]
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
-color = Color(0.937778, 0.000801281, 0.951342, 1)
+color = Color(1, 0, 1, 1)
 
-[node name="Node2D" parent="." instance=ExtResource("6_iw27f")]
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5e+06
+offset_top = -5e+06
+offset_right = 5e+06
+offset_bottom = 5e+06
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." node_paths=PackedStringArray("Goal")]
+z_index = 5
+position = Vector2(-158, 100)
+script = ExtResource("4_v6avs")
+Goal = NodePath("../Player")
+
+[node name="Icon" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(-2, -1)
+texture = ExtResource("5_8qak7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(-2, -1)
+shape = SubResource("CircleShape2D_0f2yp")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="CharacterBody2D"]
+path_desired_distance = 3.0
+target_desired_distance = 3.0
+path_postprocessing = 1
+debug_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("5_v6avs")]

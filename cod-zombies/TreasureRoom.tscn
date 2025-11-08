@@ -1,8 +1,8 @@
-[gd_scene load_steps=8 format=4 uid="uid://bkcq5anbgwgnw"]
+[gd_scene load_steps=8 format=4 uid="uid://dudsk7fdmvqky"]
 
-[ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="1_i25ha"]
-[ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_r4a4g"]
-[ext_resource type="Script" uid="uid://dxtd41b5mmx6h" path="res://NormalRoom.gd" id="3_4216k"]
+[ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_t0wgk"]
+[ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="2_knp1n"]
+[ext_resource type="Script" uid="uid://cw62m7538ickt" path="res://area_2d.gd" id="3_knp1n"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_jjjct"]
 vertices = PackedVector2Array(32, 32, -32, 32, -32, -32, 32, -32)
@@ -11,7 +11,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-32, -32, 32, -32, 32, 
 agent_radius = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jjjct"]
-texture = ExtResource("1_r4a4g")
+texture = ExtResource("1_t0wgk")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
@@ -281,15 +281,14 @@ physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_jjjct")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_r4a4g"]
-size = Vector2(481, 567)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nmd7u"]
+size = Vector2(524, 571)
 
-[node name="DeadEnd" type="Node2D"]
+[node name="TreasureRoom" type="Node2D"]
 
 [node name="RoomLayer" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAD9//z/AAAAAAAAAAD9//3/AAAAAAEAAAD9//7/AAAAAAIAAAD9////AAAAAAMAAAD9/wAAAAAAAAQAAAD+//z/AAABAAAAAAD+//3/AAABAAEAAAD+//7/AAABAAIAAAD+////AAABAAMAAAD+/wAAAAABAAQAAAD///z/AAACAAAAAAD///3/AAACAAEAAAD///7/AAACAAIAAAD/////AAACAAMAAAD//wAAAAACAAQAAAAAAPz/AAADAAAAAAAAAP3/AAADAAEAAAAAAP7/AAADAAIAAAAAAP//AAADAAMAAAAAAAAAAAADAAQAAAABAPz/AAAEAAAAAAABAP3/AAAEAAEAAAABAP7/AAAEAAIAAAABAP//AAAEAAMAAAABAAAAAAAEAAQAAAACAPz/AAAFAAAAAAACAP3/AAAFAAEAAAACAP7/AAAFAAIAAAACAP//AAAFAAMAAAACAAAAAAAFAAQAAAADAPz/AAAAAAEAAFADAP3/AAABAAEAAFADAP7/AAACAAEAAFADAP//AAACAAEAAFADAAAAAAACAAEAAFD+/wEAAAABAAIAAAD+/wIAAAABAAIAAAD+/wMAAAABAAIAAAD9/wEAAAAAAAIAAAD9/wIAAAAAAAIAAAD9/wMAAAABAAAAAGD//wEAAAACAAIAAAD//wIAAAACAAMAAAD//wMAAAACAAQAAAAAAAEAAAADAAIAAAAAAAIAAAADAAMAAAAAAAMAAAADAAQAAAABAAEAAAAEAAIAAAABAAIAAAAEAAMAAAABAAMAAAAEAAQAAAACAAEAAAAFAAIAAAACAAIAAAAFAAMAAAACAAMAAAAFAAQAAAADAAEAAAACAAEAAFADAAIAAAACAAEAAFADAAMAAAACAAEAAFAEAPz/AAAAAAAAAFAEAP3/AAABAAAAAFAEAP7/AAACAAAAAFAEAP//AAACAAAAAFAEAAAAAAACAAAAAFAEAAEAAAACAAAAAFAEAAIAAAACAAAAAFD9/wQAAAAAAAAAAGD+/wQAAAAAAAEAAFD//wQAAAAAAAEAAFAAAAQAAAAAAAEAAFAEAAMAAAABAAAAAFAEAAQAAAAAAAAAADADAAQAAAAAAAEAAGACAAQAAAAAAAEAAGABAAQAAAAEAAIAAAA=")
 tile_set = SubResource("TileSet_hwkqq")
-metadata/RoomID = 0
 
 [node name="Control" type="Control" parent="RoomLayer"]
 layout_mode = 3
@@ -304,20 +303,29 @@ metadata/Searchable = false
 [node name="Sprite2D" type="Sprite2D" parent="RoomLayer/Control/Marker2D"]
 visible = false
 scale = Vector2(0.1, 0.2)
-texture = ExtResource("1_i25ha")
+texture = ExtResource("2_knp1n")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer"]
 polygon = PackedVector2Array(-172, -221, -169, 293, 55, 309, 58, 267, 138, 276, 138, 308, 308, 307, 306, -234)
 
+[node name="RichTextLabel" type="RichTextLabel" parent="RoomLayer"]
+offset_left = -130.0
+offset_top = -56.0
+offset_right = -30.0
+offset_bottom = 44.0
+scale = Vector2(6.18871, 5.4528)
+text = "Treasure Room"
+
 [node name="Area2D" type="Area2D" parent="RoomLayer"]
-script = ExtResource("3_4216k")
+script = ExtResource("3_knp1n")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Area2D"]
-position = Vector2(68.5, 39.5)
-shape = SubResource("RectangleShape2D_r4a4g")
+position = Vector2(67, 39.5)
+shape = SubResource("RectangleShape2D_nmd7u")
 
 [node name="Polygon2D" type="Polygon2D" parent="RoomLayer"]
 color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(-181, -253, -185, 324, 323, 321, 320, -245)
+polygon = PackedVector2Array(-214, -304, -207, 379, 348, 369, 373, -308)
 
 [connection signal="body_entered" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_entered"]
+[connection signal="body_exited" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_exited"]

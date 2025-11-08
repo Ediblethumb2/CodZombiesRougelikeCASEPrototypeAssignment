@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://cp2utd5ifnng2"]
+
+[ext_resource type="Script" uid="uid://is4fj30aliwi" path="res://BasicEnemy.gd" id="1_s7bn3"]
+[ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="2_2hac7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_e6d4v"]
+radius = 26.0
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+z_index = 5
+position = Vector2(-158, 100)
+script = ExtResource("1_s7bn3")
+
+[node name="Icon" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(-2, -1)
+texture = ExtResource("2_2hac7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(-2, -1)
+shape = SubResource("CircleShape2D_e6d4v")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="CharacterBody2D"]
+path_desired_distance = 3.0
+target_desired_distance = 3.0
+path_postprocessing = 1
+debug_enabled = true
+
+[node name="Timer" type="Timer" parent="CharacterBody2D"]
+wait_time = 0.1
+autostart = true
+
+[connection signal="timeout" from="CharacterBody2D/Timer" to="CharacterBody2D" method="_on_timer_timeout"]

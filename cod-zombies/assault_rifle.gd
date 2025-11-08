@@ -40,7 +40,7 @@ func _physics_process(delta: float) -> void:
 			
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && shot == false:
 					shot = true
-					print(get_global_mouse_position() + Vector2(0,50))
+					
 					var randomnumber  =  randi() %2
 					var sign = 0
 					
@@ -63,13 +63,14 @@ func _physics_process(delta: float) -> void:
 			#shot = false
 					NewObject.set_meta("DirX",dir.x)
 					NewObject.set_meta("DirY",dir.y)
-					NewObject.global_position = global_position
+					NewObject.global_position = find_child("Gun").global_position
+					print(find_child("Gun").global_position)
 					get_parent().get_parent().add_child(NewObject)
+					print(NewObject)
 					
 		if target:
 			Input.warp_mouse(get_viewport().get_mouse_position().move_toward(target,10000*delta))
-			print( get_viewport().get_mouse_position())
-			print((get_viewport().get_mouse_position()-target).length())
+	
 			if (get_viewport().get_mouse_position()-target).length() <= 4:
 			
 				target = null

@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3 uid="uid://ddxxgige67krh"]
+
+[ext_resource type="Script" uid="uid://djf7urpn3x0qx" path="res://Map2.gd" id="1_gipgj"]
+[ext_resource type="PackedScene" uid="uid://cux2yq5vrwnck" path="res://Player.tscn" id="1_ql6pm"]
+[ext_resource type="PackedScene" uid="uid://cdbpvj4aiv3yy" path="res://Hallway4Way.tscn" id="2_k8vv2"]
+[ext_resource type="Shader" uid="uid://b0uwsb0g0w7rj" path="res://Fog.gdshader" id="4_gipgj"]
+[ext_resource type="PackedScene" uid="uid://cw2vmyud5x2" path="res://BasicEnemy.tscn" id="4_k8vv2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wq7yg"]
+shader = ExtResource("4_gipgj")
+shader_parameter/player_screen_pos = Vector2(0, 0)
+shader_parameter/viewport_size = Vector2(0, 0)
+shader_parameter/facing = Vector2(1, 0)
+shader_parameter/inner_radius = 280.0
+shader_parameter/outer_radius = 600.0
+shader_parameter/half_angle = 0.6
+shader_parameter/cone_softness = 0.25
+shader_parameter/aura_inner = 60.0
+shader_parameter/aura_outer = 120.0
+shader_parameter/aura_strength = 0.35
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_gipgj")
+
+[node name="CharacterBody2D2" parent="." instance=ExtResource("1_ql6pm")]
+
+[node name="Node2D" parent="." instance=ExtResource("2_k8vv2")]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(1, 0, 1, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_wq7yg")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5e+06
+offset_top = -5e+06
+offset_right = 5e+06
+offset_bottom = 5e+06
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CharacterBody2D" parent="." node_paths=PackedStringArray("Goal") instance=ExtResource("4_k8vv2")]
+position = Vector2(143, 47)
+Goal = NodePath("../CharacterBody2D2")
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77828.0
+offset_top = -33361.0
+offset_right = -77788.0
+offset_bottom = -33321.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10000, 10000)
+color = Color(0, 0, 0, 1)
