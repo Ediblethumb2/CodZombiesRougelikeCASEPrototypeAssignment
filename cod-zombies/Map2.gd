@@ -16,7 +16,13 @@ var PolygonsDeadEnds= [DeadEnd1.instantiate().find_child("RoomLayer").find_child
 var Polygons =[Room.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon,FourWay.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
 @onready var Polygon2Dd = get_node("Polygon2D")
 var CollisionShapeRects = []
-
+var NextRoomID = 0 
+var IDByRoomlayer = {}
+var RoomLayerByID = {}
+var Edges = {}
+var Depth = {}
+const INF = 1_000_000_000 
+var STARTID := -1
 var clause = 1    # kevin
 @onready var layer: TileMapLayer = $RoomLayer
 const SRC := 0              # <-- set to your actual TileSet source id
@@ -24,12 +30,46 @@ const ATLAS := Vector2i(3,3) # <-- atlas coords inside that source
 
 var grid: AStarGrid2D
 var cells: Array[Vector2i]    # path in MAP COORDS (no pixels)
-
+func AddRoom(RoomLayer):
+	if RoomLayer in IDByRoomlayer:
+		return IDByRoomlayer[RoomLayer]
+	var ID = NextRoomID	
+	NextRoomID+= 1
+	IDByRoomlayer[RoomLayer] = ID
+	RoomLayerByID[ID] = RoomLayer
+	Edges[ID] = []
+	Depth[ID] = INF
+	RoomLayer.set_meta("RoomID",ID)
+	return ID
+func Connect(a_id: int, b_id: int):
+	if not Edges.has(a_id): Edges[a_id] = []
+	if not Edges.has(b_id): Edges[b_id] = []
+	if b_id not in Edges[a_id]: Edges[a_id].append(b_id)
+	if a_id not in Edges[b_id]: Edges[b_id].append(a_id)
+func ComputeDepths(start_id: int) -> void:
+	for id in Edges.keys(): Depth[id] = INF
+	Depth[start_id] = 0
+	var q: Array = [start_id]
+	var head := 0
+	while head < q.size():
+		var u = q[head]; head += 1
+		for v in Edges[u]:
+			if Depth[v] == INF:
+				Depth[v] = Depth[u] + 1
+				q.append(v)
+	
+	
 func _ready() -> void:
 	grid = AStarGrid2D.new()
+	var start_layer := $Node2D/RoomLayer
+	STARTID = AddRoom(start_layer)
 # Player.gd (_ready)
 
-
+func FinalizeDungeon() -> void:
+	ComputeDepths(STARTID)
+	for room_layer in IDByRoomlayer.keys():
+		var ID = IDByRoomlayer[room_layer]
+		room_layer.set_meta("depth", Depth[ID])
 
 func _draw() -> void:
 	if cells.is_empty(): return
@@ -190,7 +230,7 @@ func FillDeadEnd():
 			
 			# add to tree deferred (avoid mid-iteration churn) & update caches
 			add_child(obj)
-			SuccessfulDeadEnds += 1
+			
 			Rects.append(world_poly)
 			CollisionShapeRects.append(obj.find_child("RoomLayer"))
 			successfulrooms += 1
@@ -199,6 +239,8 @@ func FillDeadEnd():
 			marker.set_meta("Searchable",false)
 			new_conn.set_meta("Occupied", true)
 			new_conn.set_meta("Searchable",false)
+			SuccessfulDeadEnds += 1
+			
 			_spawning = false 
 		
 			break  # only one placement per FillMap() call
@@ -464,10 +506,17 @@ func FillMap() -> void:
 					
 
 				# place it
-				var fwd := Vector2.RIGHT.rotated(marker.global_rotation)
-				if fwd.y == 1:
-					print("cgewuc	")
-					T_roomlayer.origin += Vector2(-8,0)
+				#var fwd := Vector2.RIGHT.rotated(marker.global_rotation)
+				#if fwd.y == 1:
+				#	print("cgewuc	")
+				#	T_roomlayer.origin += Vector2(-6,0)
+				#if fwd.y == -1:
+					#T_roomlayer.origin += Vector2(6,0)
+				#if fwd.x == 1:
+				#	T_roomlayer.origin += Vector2(0,8)
+				#if fwd.x == -1:
+					#T_roomlayer.origin += Vector2(0,-6)
+					
 								
 					
 				obj.find_child("RoomLayer").global_position = T_roomlayer.origin
@@ -478,6 +527,11 @@ func FillMap() -> void:
 				print("aaaa")
 				# add to tree deferred (avoid mid-iteration churn) & update caches
 				add_child(obj)
+				var SRCRoomLayer := Hallway.find_child("RoomLayer")
+				var SRCID = AddRoom(SRCRoomLayer)    
+				var NewRoomLayer := obj.find_child("RoomLayer")
+				var NewID = AddRoom(NewRoomLayer)
+				Connect(SRCID,NewID)
 				CollisionShapeRects.append(SpecialRoomObj.find_child("RoomLayer"))
 				Rects.append(world_poly)
 				successfulrooms += 1
@@ -491,8 +545,9 @@ func FillMap() -> void:
 			
 				break  # only one placement per FillMap() call
 			if HallwayDupe.size() == 0 :
+					print("ZERO")
 					DeadEndSearches += 1
-			print(HallwayDupe.size())
+			
 			_spawning = false
 			break
 				
@@ -510,14 +565,16 @@ var region =  null
 var SuccessfulDeadEnds = 0
 func _process(delta: float) -> void:
 	if successfulrooms < 100:
-		pass
-		#FillMap()
+		pass 
+		FillMap()
 	
 		
 	else:
 		
-	
+		if SuccessfulDeadEnds < DeadEndSearches:
 			FillDeadEnd()
+		else:
+			FinalizeDungeon()
 			
 	
 	

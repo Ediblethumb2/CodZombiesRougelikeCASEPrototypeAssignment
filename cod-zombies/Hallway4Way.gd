@@ -1,5 +1,5 @@
 extends Node2D
-@export var A := TileMapLayer.new()
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -8,7 +8,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if A.has_meta("depth"):
-		A.find_child("RichTextLabel").text = str($RoomLayer.get_meta("depth"))
+	if $RoomLayer.has_meta("depth"):
+		$RoomLayer/RichTextLabel.text = str($RoomLayer.get_meta("depth"))
 		set_process(false)
 		

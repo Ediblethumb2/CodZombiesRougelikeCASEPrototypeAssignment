@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cw2vmyud5x2"]
+[gd_scene load_steps=26 format=3 uid="uid://cw2vmyud5x2"]
 
 [ext_resource type="Script" uid="uid://is4fj30aliwi" path="res://BasicEnemy.gd" id="1_3wrki"]
 [ext_resource type="Texture2D" uid="uid://bknmw8lksych6" path="res://S_Walk.png" id="2_3wrki"]
@@ -151,6 +151,9 @@ animations = [{
 "speed": 60.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_yhmlg"]
+radius = 100.0
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 z_index = 5
 position = Vector2(-158, 100)
@@ -178,4 +181,11 @@ sprite_frames = SubResource("SpriteFrames_oklc3")
 animation = &"RunD"
 speed_scale = 0.3
 
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_yhmlg")
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

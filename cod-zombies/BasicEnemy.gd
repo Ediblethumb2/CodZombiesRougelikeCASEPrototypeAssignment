@@ -4,6 +4,7 @@ extends CharacterBody2D
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 @export var Goal: Node = null
+@export var Spawn: Node = null
 @export var  MovementSpeed = 400
 func _ready():
 	pass
@@ -49,3 +50,15 @@ func _physics_process(delta: float) -> void:
 
 func _on_timer_timeout() -> void:
 		$NavigationAgent2D.target_position  = Goal.global_position
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.is_class("CharacterBody2D"):
+		Goal = body
+	
+
+
+func _on_area_2d_body_exited(body: Node2D) -> void:
+	if body.is_class("CharacterBody2D"):
+		pass
+		#Goal = Spawn
