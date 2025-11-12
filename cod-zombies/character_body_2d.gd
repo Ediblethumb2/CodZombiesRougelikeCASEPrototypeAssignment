@@ -92,7 +92,7 @@ var sliding_prev := false
 func SlideCOoldownDelay(timeout):
 	await get_tree().create_timer(timeout).timeout
 	SlideCooldown = false
-
+var gun = "a"
 func _physics_process(delta: float) -> void:
 	# --- remove these lines ---
 	# SlideTween = create_tween().set_ease(...).set_trans(...).set_parallel(true)
@@ -106,8 +106,8 @@ func _physics_process(delta: float) -> void:
 	if Equipped != LastEquipped:
 		LastEquipped = Equipped
 		WeaponsDict[Equipped].call()
-
-	var gun = find_child(Equipped)
+	if find_child(Equipped):
+		gun = find_child(Equipped)
 	if sliding == false:
 		input_direction = Vector2.ZERO
 	if Equipped != "":

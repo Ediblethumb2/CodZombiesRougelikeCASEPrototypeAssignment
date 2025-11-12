@@ -58,24 +58,68 @@ func ComputeDepths(start_id: int) -> void:
 				Depth[v] = Depth[u] + 1
 				q.append(v)
 	
-	
-func _ready() -> void:
+func SetupGridFromTileMap() -> void:
 	grid = AStarGrid2D.new()
+	grid.cell_size = Vector2i(64, 64)
+	grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+
+	var used: Rect2i = layer.get_used_rect()  # cells
+	var pad := Vector2i(4, 4)
+	if used.size == Vector2i.ZERO:
+		# Fallback: approximate region from placed rooms/connectors if tilemap isn't filled yet.
+		var min_c := Vector2i(  1<<29,  1<<29)
+		var max_c := Vector2i(-(1<<29), -(1<<29))
+		for h in get_children():
+			if h is Node2D:
+				var ctrl := h.get_node_or_null("RoomLayer/Control")
+				if ctrl:
+					for m in ctrl.get_children():
+						if m is Node2D:
+							var c := layer.local_to_map(layer.to_local(m.global_position))
+							min_c.x = min(min_c.x, c.x)
+							min_c.y = min(min_c.y, c.y)
+							max_c.x = max(max_c.x, c.x)
+							max_c.y = max(max_c.y, c.y)
+		if min_c.x > max_c.x:
+			min_c = Vector2i(-16, -16); max_c = Vector2i(16, 16) # tiny safe default
+		used = Rect2i(min_c, (max_c - min_c) + Vector2i(1,1))
+
+	grid.region = Rect2i(used.position - pad, used.size + pad*2)
+	print(grid.region)
+	grid.update()
+
+
+func _ready() -> void:
+	pass
+	
 	var start_layer := $Node2D/RoomLayer
 	STARTID = AddRoom(start_layer)
 # Player.gd (_ready)
-
+func SetupGrid():
+	grid.region = Rect2i(-2500, -2500, 5000,5000)
+	grid.cell_size = Vector2i(64,64)
+	grid.update()
+func ShowPath(Start,End):
+	Start  = $TileMapLayer.local_to_map(Vector2i(Start))
+	End  = $TileMapLayer.local_to_map(Vector2i(End))
+	var PathTaken  = grid.get_id_path(Start,End)
+	
+	for cell in PathTaken:
+		
+		$TileMapLayer.set_cell(cell,0,Vector2(2,0))
+	
 func FinalizeDungeon() -> void:
 	ComputeDepths(STARTID)
 	for room_layer in IDByRoomlayer.keys():
 		var ID = IDByRoomlayer[room_layer]
 		room_layer.set_meta("depth", Depth[ID])
+		room_layer.set_meta("Budget",DepthBudgetCurve(Depth[ID]))
+		
 
 func _draw() -> void:
 	if cells.is_empty(): return
 
-	# Draw per-cell debug rects from the SAME map coords
-	# Convert map->local (pixels) using the TileMapLayer helper
 	var pts := PackedVector2Array()
 
 	for c in cells:
@@ -136,6 +180,41 @@ var successfulrooms = 0
 var placing = false
 var _spawning := false
 var SpecialRooms = 0
+func FindPaths():
+	for Hallway in get_children():
+		if not Hallway.get_class() == "Node2D":
+			continue 
+		var free_markers : Array[Node2D] = []
+		
+		var control = Hallway.get_node("RoomLayer/Control")
+		for m in control.get_children():
+			if m.get_meta("Occupied") == false || m.get_meta("Searchable") == true:
+				free_markers.append(m)
+		if free_markers.is_empty():
+			continue
+		var marker : Node2D = free_markers.pick_random()
+		for Hallway2 in get_children():
+			if not Hallway2.get_class() == "Node2D":
+				continue 
+			if Hallway == Hallway2:
+				continue
+			var free_markers2 : Array[Node2D] = []
+	
+			var control2 = Hallway2.get_node("RoomLayer/Control")
+			for m in control2.get_children():
+				for m2 in free_markers:
+					if (m.get_meta("Occupied") == false) || (m.get_meta("Searchable") == true && Vector2(m.global_position-m2.global_position).length() < 1000):
+						free_markers2.append(m2)
+					
+						Hallway.find_child("RoomLayer").find_child("RichTextLabel").text = " CONNECTING"
+						Hallway2.find_child("RoomLayer").find_child("RichTextLabel").text = " CONNECTING"
+						ShowPath(m.global_position,m2.global_position)
+						break
+			if free_markers2.is_empty():
+				continue
+			
+		
+			
 func FillDeadEnd():
 	if _spawning:
 		return
@@ -249,7 +328,11 @@ var SpecialRoomPlacing  = false
 var overlapsspecialroom = false
 var ForcePlace = false
 var SpecialRoomObj = null
-
+func DepthBudgetCurve(depth:int) -> float:
+	var L := 80.0      # asymptote (late game budget ceiling)
+	var k := 0.5       # slope
+	var m := 8.0       # midpoint depth
+	return 12.0 + L / (1.0 + exp(-k * float(depth - m)))
 # Returns the connector's transform RELATIVE to the RoomLayer it belongs to.
 func _conn_xform_rel_to_roomlayer(conn: Node2D) -> Transform2D:
 	var ctrl := conn.get_parent() # "Control" under the RoomLayer
@@ -427,9 +510,9 @@ func FillMap() -> void:
 				SpecialRoomObj.find_child("RoomLayer").global_position = T_roomlayer.origin
 				
 				SpecialRoomObj.find_child("RoomLayer").global_rotation = T_roomlayer.get_rotation()
-				print(SpecialRoomObj.name)
+				
 				SpecialRoomObj.scale = Vector2.ONE
-				print("aaaa")
+			
 					# add to tree deferred (avoid mid-iteration churn) & update caches
 				add_child(SpecialRoomObj)
 				CollisionShapeRects.append(SpecialRoomObj.find_child("RoomLayer"))
@@ -504,27 +587,14 @@ func FillMap() -> void:
 					HallwayDupePolygons.erase(local_poly)
 					continue
 					
-
-				# place it
-				#var fwd := Vector2.RIGHT.rotated(marker.global_rotation)
-				#if fwd.y == 1:
-				#	print("cgewuc	")
-				#	T_roomlayer.origin += Vector2(-6,0)
-				#if fwd.y == -1:
-					#T_roomlayer.origin += Vector2(6,0)
-				#if fwd.x == 1:
-				#	T_roomlayer.origin += Vector2(0,8)
-				#if fwd.x == -1:
-					#T_roomlayer.origin += Vector2(0,-6)
-					
 								
 					
 				obj.find_child("RoomLayer").global_position = T_roomlayer.origin
 			
 				obj.find_child("RoomLayer").global_rotation = T_roomlayer.get_rotation()
-				print(obj.name)
+			
 				obj.scale = Vector2.ONE
-				print("aaaa")
+			
 				# add to tree deferred (avoid mid-iteration churn) & update caches
 				add_child(obj)
 				var SRCRoomLayer := Hallway.find_child("RoomLayer")
@@ -545,7 +615,7 @@ func FillMap() -> void:
 			
 				break  # only one placement per FillMap() call
 			if HallwayDupe.size() == 0 :
-					print("ZERO")
+				
 					DeadEndSearches += 1
 			
 			_spawning = false
@@ -564,28 +634,18 @@ var b_id = null
 var region =  null
 var SuccessfulDeadEnds = 0
 func _process(delta: float) -> void:
-	if successfulrooms < 100:
-		pass 
+	if successfulrooms < 250:
+		
 		FillMap()
 	
 		
 	else:
 		
 		if SuccessfulDeadEnds < DeadEndSearches:
+			#FindPaths()
 			FillDeadEnd()
 		else:
+			
 			FinalizeDungeon()
 			
-	
-	
-		
-			
-
-		
-					
-				
-				
-			
-
-		
-	#pass
+			set_process(false)

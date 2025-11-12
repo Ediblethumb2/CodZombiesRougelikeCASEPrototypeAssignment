@@ -1,9 +1,9 @@
 [gd_scene load_steps=16 format=4 uid="uid://bd68wc2cr5l7b"]
 
-[ext_resource type="Script" uid="uid://cyggypf2p2f7n" path="res://room.gd" id="1_61bxy"]
 [ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_hgg63"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="3_axjh2"]
-[ext_resource type="Script" uid="uid://cyggypf2p2f7n" path="res://Room.gd" id="3_u3qo1"]
+[ext_resource type="Script" uid="uid://dp7hseugp4y6v" path="res://room.gd" id="3_u3qo1"]
+[ext_resource type="Script" uid="uid://b62jw42h774sn" path="res://RoomArea2D.gd" id="4_61bxy"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_u3qo1"]
 vertices = PackedVector2Array(32, 32, -32, 32, -32, -32, 32, -32)
@@ -315,7 +315,7 @@ sources/0 = SubResource("TileSetAtlasSource_5ruuo")
 size = Vector2(927, 693)
 
 [node name="Node2D" type="Node2D" node_paths=PackedStringArray("A")]
-script = ExtResource("1_61bxy")
+script = ExtResource("3_u3qo1")
 A = NodePath("RoomLayer")
 
 [node name="RoomLayer" type="TileMapLayer" parent="."]
@@ -360,7 +360,7 @@ polygon = PackedVector2Array(131, -404, 72, -174, -291, -145, -266, 89, -458, 60
 
 [node name="Area2D" type="Area2D" parent="RoomLayer"]
 visible = false
-script = ExtResource("3_u3qo1")
+script = ExtResource("4_61bxy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Area2D"]
 position = Vector2(-15.5, -65.5)

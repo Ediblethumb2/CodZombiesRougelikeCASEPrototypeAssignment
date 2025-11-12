@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://ddxxgige67krh"]
+[gd_scene load_steps=10 format=3 uid="uid://ddxxgige67krh"]
 
 [ext_resource type="Script" uid="uid://djf7urpn3x0qx" path="res://Map2.gd" id="1_gipgj"]
 [ext_resource type="PackedScene" uid="uid://cux2yq5vrwnck" path="res://Player.tscn" id="1_ql6pm"]
 [ext_resource type="PackedScene" uid="uid://cdbpvj4aiv3yy" path="res://Hallway4Way.tscn" id="2_k8vv2"]
 [ext_resource type="Shader" uid="uid://b0uwsb0g0w7rj" path="res://Fog.gdshader" id="4_gipgj"]
+[ext_resource type="PackedScene" uid="uid://cw2vmyud5x2" path="res://Enemies/BasicEnemy.tscn" id="4_k8vv2"]
 [ext_resource type="Texture2D" uid="uid://d3gewyv8w4uj0" path="res://noise.jpg" id="6_wq7yg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wq7yg"]
@@ -19,7 +20,7 @@ shader_parameter/aura_inner = 60.0
 shader_parameter/aura_outer = 120.0
 shader_parameter/aura_strength = 0.35
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wq7yg"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xh7kc"]
 texture = ExtResource("6_wq7yg")
 texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
@@ -41,12 +42,13 @@ texture_region_size = Vector2i(64, 64)
 
 [sub_resource type="TileSet" id="TileSet_rpcyw"]
 tile_size = Vector2i(64, 64)
-sources/0 = SubResource("TileSetAtlasSource_wq7yg")
+sources/0 = SubResource("TileSetAtlasSource_xh7kc")
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_gipgj")
 
-[node name="Player" parent="." instance=ExtResource("1_ql6pm")]
+[node name="CharacterBody2D2" parent="." instance=ExtResource("1_ql6pm")]
+Equipped = ""
 
 [node name="Node2D" parent="." instance=ExtResource("2_k8vv2")]
 
@@ -68,6 +70,10 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
+[node name="CharacterBody2D" parent="." node_paths=PackedStringArray("Goal") instance=ExtResource("4_k8vv2")]
+position = Vector2(143, 47)
+Goal = NodePath("../CharacterBody2D2")
+
 [node name="ColorRect2" type="ColorRect" parent="."]
 visible = false
 anchors_preset = 8
@@ -85,5 +91,4 @@ scale = Vector2(10000, 10000)
 color = Color(0, 0, 0, 1)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
-z_index = 18
 tile_set = SubResource("TileSet_rpcyw")

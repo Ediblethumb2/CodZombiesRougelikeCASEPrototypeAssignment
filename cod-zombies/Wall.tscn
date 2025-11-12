@@ -2304,7 +2304,7 @@ script = ExtResource("3_ywhhs")
 polygon = PackedVector2Array(190, -456, 179, -314, 255, -320, 260, -456)
 
 [node name="RoomLayer" type="TileMapLayer" parent="."]
-z_index = -1
+z_index = 6
 tile_map_data = PackedByteArray(0, 0, 3, 0, 250, 255, 0, 0, 2, 0, 1, 0, 0, 0, 3, 0, 249, 255, 0, 0, 2, 0, 0, 0, 0, 0)
 tile_set = SubResource("TileSet_bhtf4")
 
@@ -2325,5 +2325,6 @@ texture = ExtResource("1_l6igm")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer"]
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
+z_index = 6
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(191, -453, 175, -314, 258, -320, 263, -455)
