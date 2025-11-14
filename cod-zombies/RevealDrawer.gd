@@ -39,10 +39,14 @@ func _ready() -> void:
 		mask_vp.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
 
 func _process(_dt: float) -> void:
-	_update_fog_scale()  # scales with minimap zoom
+        var mask_vp := get_viewport() as SubViewport
+        if mask_vp and mask_vp.size != minimap_vp.size:
+                mask_vp.size = minimap_vp.size
 
-	# Convert world -> MINIMAP pixels (uses the MINIMAP viewport’s canvas transform!)
-	var to_minimap: Transform2D = minimap_vp.get_canvas_transform()
+        _update_fog_scale()  # scales with minimap zoom
+
+        # Convert world -> MINIMAP pixels (uses the MINIMAP viewport’s canvas transform!)
+        var to_minimap: Transform2D = minimap_vp.get_canvas_transform()
 
 	var player_px: Vector2 = to_minimap * player.global_position
 
