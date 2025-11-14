@@ -13,5 +13,8 @@ func _process(delta: float) -> void:
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.name != "Player":
+		queue_free()
 	if body.has_meta("Health"):
 		body.set_meta("Health",body.get_meta("Health")- 10)
+		

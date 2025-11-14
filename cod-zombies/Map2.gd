@@ -634,7 +634,8 @@ var b_id = null
 var region =  null
 var SuccessfulDeadEnds = 0
 func _process(delta: float) -> void:
-	if successfulrooms < 250:
+	
+	if successfulrooms 	< 30:
 		
 		FillMap()
 	

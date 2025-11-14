@@ -365,13 +365,6 @@ offset_bottom = 222.0
 scale = Vector2(8.54591, 7.55988)
 text = "0"
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="RoomLayer"]
-z_index = 24
-offset_right = 285.0
-offset_bottom = 222.0
-scale = Vector2(8.54591, 7.55988)
-text = "0"
-
 [node name="Spawn" type="Node2D" parent="RoomLayer"]
 
 [node name="Point" type="Node2D" parent="RoomLayer/Spawn"]
@@ -400,4 +393,5 @@ position = Vector2(424, 346)
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.05, 0.05)
 
+[connection signal="body_entered" from="RoomLayer/Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_entered" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_entered"]

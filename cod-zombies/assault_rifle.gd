@@ -64,9 +64,9 @@ func _physics_process(delta: float) -> void:
 					NewObject.set_meta("DirX",dir.x)
 					NewObject.set_meta("DirY",dir.y)
 					NewObject.global_position = find_child("Gun").global_position
-					print(find_child("Gun").global_position)
+					
 					get_parent().get_parent().add_child(NewObject)
-					print(NewObject)
+				
 					
 		if target:
 			Input.warp_mouse(get_viewport().get_mouse_position().move_toward(target,10000*delta))

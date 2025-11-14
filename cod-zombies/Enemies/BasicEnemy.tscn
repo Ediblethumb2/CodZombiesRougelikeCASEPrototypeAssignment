@@ -1,6 +1,6 @@
 [gd_scene load_steps=26 format=3 uid="uid://cw2vmyud5x2"]
 
-[ext_resource type="Script" uid="uid://is4fj30aliwi" path="res://BasicEnemy.gd" id="1_3wrki"]
+[ext_resource type="Script" uid="uid://is4fj30aliwi" path="res://Enemies/BasicEnemy.gd" id="1_1fowp"]
 [ext_resource type="Texture2D" uid="uid://bknmw8lksych6" path="res://S_Walk.png" id="2_3wrki"]
 [ext_resource type="Texture2D" uid="uid://y5ca2ljgexpg" path="res://D_Walk.png" id="2_t68yt"]
 [ext_resource type="Texture2D" uid="uid://cdqgk7lcfqhv3" path="res://U_Walk.png" id="4_yhmlg"]
@@ -157,7 +157,7 @@ radius = 100.0
 [node name="CharacterBody2D" type="CharacterBody2D"]
 z_index = 5
 position = Vector2(-158, 100)
-script = ExtResource("1_3wrki")
+script = ExtResource("1_1fowp")
 metadata/Difficulty = 0.0
 metadata/Health = 100.0
 metadata/Fire = false

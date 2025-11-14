@@ -39,7 +39,7 @@ func Fog():
 var SlidingOnce = false
 var SlideCooldown = false
 func AssaultRifle():
-	print("a")
+
 	var gun = find_child(Equipped)
 	gun.Enabled = true
 	gun.find_child("Gun").visible = true
@@ -60,7 +60,7 @@ func _input(event: InputEvent) -> void:
 		sliding = true
 		SlideCooldown  = true
 		SlideCOoldownDelay(5)
-		print("egbewgwhfuiwef")
+	
 		
 		
 	if event.is_action_released("Slide"):
@@ -102,12 +102,15 @@ func _physics_process(delta: float) -> void:
 	$CanvasLayer/SubViewportContainer/SubViewport/Camera2D.global_position = global_position
 
 	Fog()
-
+	var current_fps = Engine.get_frames_per_second()
+	$CanvasLayer/RichTextLabel.text = "FPS: " + str(current_fps)
 	if Equipped != LastEquipped:
 		LastEquipped = Equipped
 		WeaponsDict[Equipped].call()
-	if find_child(Equipped):
-		gun = find_child(Equipped)
+
+	if Equipped!= "" :
+		if find_child(Equipped):
+			gun = find_child(Equipped)
 	if sliding == false:
 		input_direction = Vector2.ZERO
 	if Equipped != "":

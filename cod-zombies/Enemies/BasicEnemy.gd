@@ -10,6 +10,7 @@ func _ready():
 	set_physics_process(false)
 var Direction = Vector2(0,0)
 var State = ""
+var OnlyOnce = false
 func _physics_process(delta: float) -> void:
 	
 	if get_meta("Health") <= 0:
@@ -17,8 +18,9 @@ func _physics_process(delta: float) -> void:
 	if get_meta("Fast") == true:
 		MovementSpeed = 800
 		$RichTextLabel.text = "Fast"
-	if get_meta("Tanky") == true:
+	if get_meta("Tanky") == true && OnlyOnce == false:
 		set_meta("Health",160.0) 
+		OnlyOnce = true
 		
 		$RichTextLabel.text = "Tank"
 	if !$NavigationAgent2D.is_target_reached():
@@ -78,4 +80,5 @@ func _on_area_2d_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		print(Spawn)
 		Goal = Spawn
+		set_physics_process(false)
 		#Goal = Spawn
