@@ -1,0 +1,110 @@
+[gd_scene load_steps=9 format=3 uid="uid://cvef3nlgfsqou"]
+
+[ext_resource type="Script" uid="uid://4kf7cmq4buvd" path="res://map_4.gd" id="1_uefmm"]
+[ext_resource type="PackedScene" uid="uid://cdbpvj4aiv3yy" path="res://Hallway4Way.tscn" id="2_1tr27"]
+[ext_resource type="Shader" uid="uid://b0uwsb0g0w7rj" path="res://Fog.gdshader" id="3_4uli2"]
+[ext_resource type="Texture2D" uid="uid://d3gewyv8w4uj0" path="res://noise.jpg" id="4_dtlvu"]
+[ext_resource type="Script" uid="uid://tb5sfwhpbwuu" path="res://FogOfWar.gd" id="5_g2r4b"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wq7yg"]
+shader = ExtResource("3_4uli2")
+shader_parameter/player_screen_pos = Vector2(0, 0)
+shader_parameter/viewport_size = Vector2(0, 0)
+shader_parameter/facing = Vector2(1, 0)
+shader_parameter/inner_radius = 280.0
+shader_parameter/outer_radius = 600.0
+shader_parameter/half_angle = 0.6
+shader_parameter/cone_softness = 0.25
+shader_parameter/aura_inner = 60.0
+shader_parameter/aura_outer = 120.0
+shader_parameter/aura_strength = 0.35
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wq7yg"]
+texture = ExtResource("4_dtlvu")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_rpcyw"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_wq7yg")
+
+[node name="Node2D" type="Node2D"]
+visible = false
+script = ExtResource("1_uefmm")
+
+[node name="Node2D" parent="." instance=ExtResource("2_1tr27")]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(1, 0, 1, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_wq7yg")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.00055e+06
+offset_top = -5.00041e+06
+offset_right = 4.99946e+06
+offset_bottom = 4.99959e+06
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77828.0
+offset_top = -33361.0
+offset_right = -77788.0
+offset_bottom = -33321.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10000, 10000)
+color = Color(0, 0, 0, 1)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+z_index = 18
+tile_set = SubResource("TileSet_rpcyw")
+
+[node name="FogOfWar" type="Node2D" parent="." node_paths=PackedStringArray("fog_sprite")]
+light_mask = 4
+visibility_layer = 4
+z_index = 100
+script = ExtResource("5_g2r4b")
+fog_sprite = NodePath("FogSprite")
+cone_length = 200.0
+ray_count = 100
+step_distance = 5.0
+world_min = Vector2(-10000, -10000)
+world_max = Vector2(10000, 10000)
+tex_size = Vector2i(500, 500)
+
+[node name="FogSprite" type="Sprite2D" parent="FogOfWar"]
+light_mask = 1023
+visibility_layer = 1023
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+visible = false
+z_index = 4096
+color = Color(0, 0, 0, 1)

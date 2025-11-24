@@ -1,92 +1,20 @@
-[gd_scene load_steps=20 format=3 uid="uid://cnetsqw6186fh"]
+[gd_scene load_steps=5 format=3 uid="uid://cnetsqw6186fh"]
 
-[ext_resource type="Script" uid="uid://ucua3301rx7f" path="res://character_body_2d.gd" id="1_0e48y"]
 [ext_resource type="Shader" uid="uid://b7faqqs6y1p7h" path="res://CRT.gdshader" id="2_hqns4"]
-[ext_resource type="PackedScene" uid="uid://c7rsvrxnevbve" path="res://AssaultRifle.tscn" id="3_epypp"]
-[ext_resource type="PackedScene" uid="uid://uj72xmt2oulj" path="res://Pistol.tscn" id="4_0hol4"]
-[ext_resource type="Script" uid="uid://bugkk0ai814be" path="res://sub_viewport.gd" id="5_kdubu"]
-[ext_resource type="Texture2D" uid="uid://v3lybqdtrxop" path="res://Player_Knight_SpriteSheet.png" id="5_q6r6c"]
-[ext_resource type="Script" uid="uid://dbhcmah4jmbm" path="res://color_rect.gd" id="6_d21ai"]
+[ext_resource type="PackedScene" uid="uid://cux2yq5vrwnck" path="res://Player.tscn" id="3_epypp"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="6_kdubu"]
-[ext_resource type="Shader" uid="uid://b0uwsb0g0w7rj" path="res://Fog.gdshader" id="6_rj586"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x0ka3"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_hqns4")
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_q6r6c"]
-radius = 26.1725
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kdubu"]
-atlas = ExtResource("5_q6r6c")
-region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d21ai"]
-atlas = ExtResource("5_q6r6c")
-region = Rect2(16, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rj586"]
-atlas = ExtResource("5_q6r6c")
-region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4d7sh"]
-atlas = ExtResource("5_q6r6c")
-region = Rect2(16, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ir8iy"]
-atlas = ExtResource("5_q6r6c")
-region = Rect2(32, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hqns4"]
-atlas = ExtResource("5_q6r6c")
-region = Rect2(48, 16, 16, 16)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_x0ka3"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kdubu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d21ai")
-}],
-"loop": true,
-"name": &"Idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rj586")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4d7sh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ir8iy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hqns4")
-}],
-"loop": true,
-"name": &"Move",
-"speed": 5.0
-}]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4d7sh"]
-shader = ExtResource("6_rj586")
-shader_parameter/player_screen_pos = Vector2(0, 0)
-shader_parameter/viewport_size = Vector2(0, 0)
-shader_parameter/facing = Vector2(1, 0)
-shader_parameter/inner_radius = 140.0
-shader_parameter/outer_radius = 300.0
-shader_parameter/half_angle = 0.873
-shader_parameter/cone_softness = 0.25
-shader_parameter/aura_inner = 60.0
-shader_parameter/aura_outer = 120.0
-shader_parameter/aura_strength = 0.35
-
 [node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(309.5, 34.5)
+scale = Vector2(4.63281, 5.46094)
+texture = ExtResource("6_kdubu")
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 visible = false
@@ -97,67 +25,4 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(309.5, 34.5)
-scale = Vector2(4.63281, 5.46094)
-texture = ExtResource("6_kdubu")
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
-position = Vector2(-454, 0)
-script = ExtResource("1_0e48y")
-metadata/NoFog = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-shape = SubResource("CircleShape2D_q6r6c")
-
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
-z_index = 2
-zoom = Vector2(1.3, 1.3)
-
-[node name="AssaultRifle" parent="CharacterBody2D" instance=ExtResource("3_epypp")]
-z_index = 2
-
-[node name="Pistol" parent="CharacterBody2D" instance=ExtResource("4_0hol4")]
-z_index = 2
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
-z_index = 2
-scale = Vector2(3, 3)
-sprite_frames = SubResource("SpriteFrames_x0ka3")
-animation = &"Move"
-frame_progress = 0.749484
-
-[node name="CanvasLayer" type="CanvasLayer" parent="CharacterBody2D"]
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="CharacterBody2D/CanvasLayer"]
-z_index = 5
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -350.0
-offset_bottom = 350.0
-grow_horizontal = 0
-metadata/_edit_use_anchors_ = true
-
-[node name="SubViewport" type="SubViewport" parent="CharacterBody2D/CanvasLayer/SubViewportContainer"]
-disable_3d = true
-handle_input_locally = false
-size = Vector2i(350, 350)
-render_target_update_mode = 4
-script = ExtResource("5_kdubu")
-
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D/CanvasLayer/SubViewportContainer/SubViewport"]
-position = Vector2(10, -67)
-zoom = Vector2(0.1, 0.1)
-
-[node name="Line2D" type="Line2D" parent="CharacterBody2D/CanvasLayer/SubViewportContainer"]
-points = PackedVector2Array(8, 0, -1, 328, 342, 331, 345, 6, 8, 0)
-
-[node name="ColorRect" type="ColorRect" parent="CharacterBody2D/CanvasLayer"]
-z_index = 3
-material = SubResource("ShaderMaterial_4d7sh")
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0, 0, 0, 1)
-script = ExtResource("6_d21ai")
-player_path = NodePath("../..")
+[node name="Player" parent="." instance=ExtResource("3_epypp")]

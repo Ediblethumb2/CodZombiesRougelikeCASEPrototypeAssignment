@@ -9,7 +9,7 @@ var TreasureRoom = preload("res://TreasureRoom.tscn")
 var hallways = [Room,FourWay]
 var SpecialRoom = [Shop,TreasureRoom]
 var SpecialRoomPolygons = [Shop.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon,TreasureRoom.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
-var SpecialRoomWeighting = {"Shop" : 5,"TreasureRoom" : 20}
+var SpecialRoomWeighting = {"Shop" : 20,"TreasureRoom" : 20}
 var DeadEnd1 = preload("res://DeadEnd.tscn")
 var DeadEnds = [DeadEnd1,Wall]
 var PolygonsDeadEnds= [DeadEnd1.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon,Wall.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
@@ -373,9 +373,9 @@ func FillMap() -> void:
 
 		var marker : Node2D = free_markers.pick_random()
 		if SpecialRooms < 10 && (marker.global_position - $Node2D/RoomLayer.global_position).length() > 5000:
-			SpecialRoomWeighting = {"Shop" : 5,"TreasureRoom" : 20}
+			SpecialRoomWeighting = {"Shop" : 5,"TreasureRoom" : 10}
 		else:
-			SpecialRoomWeighting = {"Shop" : 5,"TreasureRoom" : 20}
+			SpecialRoomWeighting = {"Shop" : 25,"TreasureRoom" : 25}
 			
 			
 		if overlapsspecialroom == true && SpecialRoomPlacing == true:

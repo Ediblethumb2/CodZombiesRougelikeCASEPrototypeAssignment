@@ -323,9 +323,5 @@ script = ExtResource("3_knp1n")
 position = Vector2(67, 39.5)
 shape = SubResource("RectangleShape2D_nmd7u")
 
-[node name="Polygon2D" type="Polygon2D" parent="RoomLayer"]
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(-214, -304, -207, 379, 348, 369, 373, -308)
-
 [connection signal="body_entered" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_entered"]
 [connection signal="body_exited" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_exited"]

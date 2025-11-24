@@ -7,6 +7,7 @@
 script = ExtResource("1_1e1q2")
 
 [node name="Gun" type="Sprite2D" parent="."]
+visible = false
 z_index = 2
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("2_n8kc8")

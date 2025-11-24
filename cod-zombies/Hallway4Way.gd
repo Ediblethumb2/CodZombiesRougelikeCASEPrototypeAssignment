@@ -49,8 +49,16 @@ func _process(delta: float) -> void:
 					continue
 				else:
 					var EnemyOBJ = ENEMIES[enemy]["Scene"].instantiate()
-					var Spawn = $RoomLayer/Spawn.get_children().pick_random()
+					var Spawn = null
+					for Spawns in $RoomLayer/Spawn.get_children():
+						if not Spawns.has_meta("Occupied"):
+							Spawn = Spawns
+							break
+					
 					EnemyOBJ.global_position = Spawn.global_position
+					EnemyOBJ.set_meta("Depth",$RoomLayer.get_meta("depth"))
+					print($RoomLayer.get_meta("depth"))
+					Spawn.set_meta("Occupied",true)
 					
 					EnemyOBJ.Spawn = Spawn
 					for mods in Modnames:

@@ -14,10 +14,6 @@ func _process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.get_class() == "CharacterBody2D":
 		body.set_meta("NoFog",true)
-		var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
-	
-		tween.tween_property(get_parent().find_child("Polygon2D"),"color:a" ,0, 0.3)
-		tween.play()
 		
 
 

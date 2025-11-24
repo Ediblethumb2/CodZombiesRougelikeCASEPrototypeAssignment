@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://cn57khka3p178"]
+
+[ext_resource type="Script" uid="uid://bve735r505027" path="res://PistolShop.gd" id="1_op5jx"]
+[ext_resource type="Texture2D" uid="uid://bwnii3nc5m5m6" path="res://Screenshot_2025-10-01_121003-removebg-preview.png" id="2_uw71q"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_op5jx"]
+radius = 41.1947
+
+[node name="Pistol" type="Node2D"]
+z_index = 4096
+script = ExtResource("1_op5jx")
+
+[node name="Gun" type="Sprite2D" parent="."]
+z_index = 2
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_uw71q")
+
+[node name="Area2D" type="Area2D" parent="."]
+z_index = 4096
+collision_priority = 500.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+light_mask = 3
+visibility_layer = 3
+z_index = 4096
+shape = SubResource("CircleShape2D_op5jx")
+
+[node name="CostLabel" type="RichTextLabel" parent="."]
+offset_left = 31.0
+offset_top = -19.0
+offset_right = 115.0
+offset_bottom = 50.0
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

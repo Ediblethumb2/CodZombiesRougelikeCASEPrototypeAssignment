@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://cdbpvj4aiv3yy"]
+[gd_scene load_steps=10 format=4 uid="uid://cdbpvj4aiv3yy"]
 
 [ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_jjjct"]
 [ext_resource type="Script" uid="uid://bv2ul1g2r0uhp" path="res://Hallway4Way.gd" id="1_uuj4d"]
@@ -284,6 +284,9 @@ physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_d3rus")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uuj4d"]
+size = Vector2(801, 642)
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_uuj4d")
 metadata/Difficulty = 0.0
@@ -351,12 +354,9 @@ polygon = PackedVector2Array(92, -695, 101, -167, -289, -167, -291, 35, -826, 21
 [node name="Area2D" type="Area2D" parent="RoomLayer"]
 script = ExtResource("3_d3rus")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer/Area2D"]
-polygon = PackedVector2Array(-298, -160, 66, -186, 78, -645, 233, -655, 233, -175, 579, -183, 576, 34, 1001, 17, 1011, 189, 568, 182, 581, 497, 253, 502, 253, 901, 86, 906, 81, 492, -288, 487, -308, 179, -778, 184, -778, 17, -278, 42)
-
-[node name="Polygon2D" type="Polygon2D" parent="RoomLayer"]
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(-345, -228, 66, -186, 47, -761, 276, -805, 321, -198, 579, -183, 576, 34, 1164, -13, 1172, 238, 568, 182, 631, 527, 291, 579, 306, 1038, 32, 1015, 62, 534, -360, 512, -308, 179, -952, 179, -930, -6, -360, 9)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Area2D"]
+position = Vector2(113.5, 172)
+shape = SubResource("RectangleShape2D_uuj4d")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="RoomLayer"]
 z_index = 24

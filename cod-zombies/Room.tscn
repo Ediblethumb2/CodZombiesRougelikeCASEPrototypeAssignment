@@ -354,10 +354,6 @@ texture = ExtResource("3_axjh2")
 visible = false
 polygon = PackedVector2Array(150, -375, 160, -132, -219, -118, -224, 96, -443, 87, -417, 231, 368, 225, 378, -118, 276, -124, 285, -345, 222, -324)
 
-[node name="Polygon2D" type="Polygon2D" parent="RoomLayer"]
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(131, -404, 72, -174, -291, -145, -266, 89, -458, 60, -463, 265, 427, 290, 390, -379)
-
 [node name="Area2D" type="Area2D" parent="RoomLayer"]
 visible = false
 script = ExtResource("4_61bxy")

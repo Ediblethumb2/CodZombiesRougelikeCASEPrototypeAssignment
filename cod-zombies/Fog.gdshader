@@ -5,12 +5,12 @@ uniform vec2 viewport_size;               // pixels
 uniform vec2 facing = vec2(1.0, 0.0);     // normalized screen-space aim
 
 // Cone (flashlight) params
-uniform float inner_radius = 280.0;       // bright center distance
-uniform float outer_radius = 600.0;       // fully dark beyond this
-uniform float half_angle = 0.6;          // radians (~26°)
+uniform float inner_radius = 500.0;       // bright center distance
+uniform float outer_radius = 1200.0;       // fully dark beyond this
+uniform float half_angle = 1.5 ;          // radians (~26°)
 uniform float cone_softness = 0.25;       // 0..1, softens cone edges
 
-// Global ambient (tiny baseline visibility everywhere)
+// Global ambient
 instance uniform float ambient = 0.0;              // 0..1
 
 // --- New: local aura around player ---
@@ -23,7 +23,7 @@ void fragment() {
     vec2 v = frag_px - player_screen_pos;
     float d = length(v) + 1e-5;
 
-    // Radial falloff for the cone's reach
+    // falloff for the cone's reach
     float radial = smoothstep(outer_radius, inner_radius, d);
 
     // Angular falloff for the cone

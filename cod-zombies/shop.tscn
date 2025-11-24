@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=4 uid="uid://bsjawcqr28vac"]
 
 [ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_e7rdd"]
+[ext_resource type="Script" uid="uid://cv6d0i8dhojea" path="res://shop.gd" id="1_fgaav"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="2_blqjs"]
-[ext_resource type="Script" uid="uid://cw62m7538ickt" path="res://area_2d.gd" id="3_blqjs"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_jjjct"]
 vertices = PackedVector2Array(32, 32, -32, 32, -32, -32, 32, -32)
@@ -285,6 +285,7 @@ sources/0 = SubResource("TileSetAtlasSource_jjjct")
 size = Vector2(524, 571)
 
 [node name="Shop" type="Node2D"]
+script = ExtResource("1_fgaav")
 
 [node name="RoomLayer" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAD9//z/AAAAAAAAAAD9//3/AAAAAAEAAAD9//7/AAAAAAIAAAD9////AAAAAAMAAAD9/wAAAAAAAAQAAAD+//z/AAABAAAAAAD+//3/AAABAAEAAAD+//7/AAABAAIAAAD+////AAABAAMAAAD+/wAAAAABAAQAAAD///z/AAACAAAAAAD///3/AAACAAEAAAD///7/AAACAAIAAAD/////AAACAAMAAAD//wAAAAACAAQAAAAAAPz/AAADAAAAAAAAAP3/AAADAAEAAAAAAP7/AAADAAIAAAAAAP//AAADAAMAAAAAAAAAAAADAAQAAAABAPz/AAAEAAAAAAABAP3/AAAEAAEAAAABAP7/AAAEAAIAAAABAP//AAAEAAMAAAABAAAAAAAEAAQAAAACAPz/AAAFAAAAAAACAP3/AAAFAAEAAAACAP7/AAAFAAIAAAACAP//AAAFAAMAAAACAAAAAAAFAAQAAAADAPz/AAAAAAEAAFADAP3/AAABAAEAAFADAP7/AAACAAEAAFADAP//AAACAAEAAFADAAAAAAACAAEAAFD+/wEAAAABAAIAAAD+/wIAAAABAAIAAAD+/wMAAAABAAIAAAD9/wEAAAAAAAIAAAD9/wIAAAAAAAIAAAD9/wMAAAABAAAAAGD//wEAAAACAAIAAAD//wIAAAACAAMAAAD//wMAAAACAAQAAAAAAAEAAAADAAIAAAAAAAIAAAADAAMAAAAAAAMAAAADAAQAAAABAAEAAAAEAAIAAAABAAIAAAAEAAMAAAABAAMAAAAEAAQAAAACAAEAAAAFAAIAAAACAAIAAAAFAAMAAAACAAMAAAAFAAQAAAADAAEAAAACAAEAAFADAAIAAAACAAEAAFADAAMAAAACAAEAAFAEAPz/AAAAAAAAAFAEAP3/AAABAAAAAFAEAP7/AAACAAAAAFAEAP//AAACAAAAAFAEAAAAAAACAAAAAFAEAAEAAAACAAAAAFAEAAIAAAACAAAAAFD9/wQAAAAAAAAAAGD+/wQAAAAAAAEAAFD//wQAAAAAAAEAAFAAAAQAAAAAAAEAAFAEAAMAAAABAAAAAFAEAAQAAAAAAAAAADADAAQAAAAAAAEAAGACAAQAAAAAAAEAAGABAAQAAAAEAAIAAAA=")
@@ -317,15 +318,23 @@ scale = Vector2(6.18871, 5.4528)
 text = "Shop"
 
 [node name="Area2D" type="Area2D" parent="RoomLayer"]
-script = ExtResource("3_blqjs")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Area2D"]
 position = Vector2(67, 39.5)
 shape = SubResource("RectangleShape2D_e7rdd")
 
-[node name="Polygon2D" type="Polygon2D" parent="RoomLayer"]
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(-200, -243, -192, 332, 39, 338, 57, 335, 140, 325, 145, 327, 334, 322, 337, -262)
+[node name="Spawnpoints" type="Node2D" parent="RoomLayer"]
 
-[connection signal="body_entered" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_entered"]
-[connection signal="body_exited" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_exited"]
+[node name="Spawn1" type="Node2D" parent="RoomLayer/Spawnpoints"]
+metadata/Occupied = false
+
+[node name="Spawn2" type="Node2D" parent="RoomLayer/Spawnpoints"]
+position = Vector2(156, 1)
+metadata/Occupied = false
+
+[node name="Spawn3" type="Node2D" parent="RoomLayer/Spawnpoints"]
+position = Vector2(81, -68)
+metadata/Occupied = false
+
+[connection signal="body_entered" from="RoomLayer/Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="RoomLayer/Area2D" to="." method="_on_area_2d_body_exited"]

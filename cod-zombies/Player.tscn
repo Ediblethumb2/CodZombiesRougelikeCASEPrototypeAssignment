@@ -1,12 +1,14 @@
-[gd_scene load_steps=17 format=3 uid="uid://cux2yq5vrwnck"]
+[gd_scene load_steps=19 format=3 uid="uid://cux2yq5vrwnck"]
 
 [ext_resource type="Script" uid="uid://ucua3301rx7f" path="res://character_body_2d.gd" id="1_dtqjt"]
 [ext_resource type="PackedScene" uid="uid://c7rsvrxnevbve" path="res://AssaultRifle.tscn" id="2_5ncpa"]
 [ext_resource type="PackedScene" uid="uid://uj72xmt2oulj" path="res://Pistol.tscn" id="3_wi0c6"]
 [ext_resource type="Texture2D" uid="uid://v3lybqdtrxop" path="res://Player_Knight_SpriteSheet.png" id="4_hp6x6"]
 [ext_resource type="Script" uid="uid://bugkk0ai814be" path="res://sub_viewport.gd" id="5_3tkgg"]
+[ext_resource type="Script" uid="uid://bijxf072m2qgh" path="res://Camera2DPlayer.gd" id="6_5ncpa"]
 [ext_resource type="Shader" uid="uid://b0uwsb0g0w7rj" path="res://Fog.gdshader" id="6_l6ohk"]
 [ext_resource type="Script" uid="uid://dbhcmah4jmbm" path="res://color_rect.gd" id="7_oudfo"]
+[ext_resource type="PackedScene" uid="uid://ciaves0vvj80b" path="res://knife.tscn" id="9_wi0c6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d6rpx"]
 
@@ -70,31 +72,40 @@ shader = ExtResource("6_l6ohk")
 shader_parameter/player_screen_pos = Vector2(0, 0)
 shader_parameter/viewport_size = Vector2(0, 0)
 shader_parameter/facing = Vector2(1, 0)
-shader_parameter/inner_radius = 140.0
-shader_parameter/outer_radius = 300.0
-shader_parameter/half_angle = 0.873
+shader_parameter/inner_radius = 350.0
+shader_parameter/outer_radius = 600.0
+shader_parameter/half_angle = 0.8
 shader_parameter/cone_softness = 0.25
 shader_parameter/aura_inner = 60.0
 shader_parameter/aura_outer = 120.0
 shader_parameter/aura_strength = 0.35
 
-[node name="CharacterBody2D2" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
 position = Vector2(-454, 74)
 script = ExtResource("1_dtqjt")
+Dosh = 0
 metadata/NoFog = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_d6rpx")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-z_index = 2
-zoom = Vector2(1.3, 1.3)
+metadata/Health = 100
+metadata/Shop = false
+metadata/Money = 1000
 
 [node name="AssaultRifle" parent="." instance=ExtResource("2_5ncpa")]
 z_index = 2
 
+[node name="Knife" parent="." instance=ExtResource("9_wi0c6")]
+z_index = 2
+
 [node name="Pistol" parent="." instance=ExtResource("3_wi0c6")]
 z_index = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_d6rpx")
+
+[node name="PlrCam" type="Camera2D" parent="."]
+z_index = 2
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+script = ExtResource("6_5ncpa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 z_index = 2
@@ -117,6 +128,7 @@ metadata/_edit_use_anchors_ = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer"]
 disable_3d = true
 handle_input_locally = false
+canvas_cull_mask = 4294966279
 size = Vector2i(350, 350)
 render_target_update_mode = 4
 script = ExtResource("5_3tkgg")
@@ -128,7 +140,7 @@ zoom = Vector2(0.1, 0.1)
 [node name="Line2D" type="Line2D" parent="CanvasLayer/SubViewportContainer"]
 points = PackedVector2Array(8, 0, -1, 328, 342, 331, 345, 6, 8, 0)
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="FlashlightRect" type="ColorRect" parent="CanvasLayer"]
 z_index = 3
 material = SubResource("ShaderMaterial_jatw7")
 offset_right = 40.0
@@ -143,3 +155,16 @@ offset_left = 2.0
 offset_right = 641.0
 offset_bottom = 40.0
 text = "ewererer"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer"]
+z_index = 5
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -243.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "fdf"

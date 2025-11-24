@@ -23,8 +23,6 @@ func ShootCooldown():
 	
 func _physics_process(delta: float) -> void:
 
-
-	
 	if Enabled == true:
 		var rotationabs  = abs(rotation_degrees)
 		if rotationabs >= 360:
@@ -63,7 +61,7 @@ func _physics_process(delta: float) -> void:
 			#shot = false
 					NewObject.set_meta("DirX",dir.x)
 					NewObject.set_meta("DirY",dir.y)
-					NewObject.global_position = find_child("Gun").global_position
+					NewObject.global_position = find_child("Gun").global_position + (dir * 50)
 					
 					get_parent().get_parent().add_child(NewObject)
 				
@@ -78,7 +76,6 @@ func _physics_process(delta: float) -> void:
 		
 			
 			
-		
 		
 		
 		

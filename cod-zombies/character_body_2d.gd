@@ -7,14 +7,21 @@ var Direction = Vector2.ZERO
 var Bullet = preload("res://Bullet.tscn")
 var target
 var shot = false
+
+@export var Dosh = 1000
 @export var Equipped = 	""
 var LastEquipped = ""
 var WeaponsDict = {"AssaultRifle":AssaultRifle,"Pistol":Pistol}
-var Inventory = ["Pistol","AssaultRifle"]
+var Inventory = []
 
-
+func set_limits(rect: Rect2):
+	$Camera2D.limit_left   = int(rect.position.x)
+	$Camera2D.limit_top    = int(rect.position.y)
+	$Camera2D.limit_right  = int(rect.position.x + rect.size.x)
+	$Camera2D.limit_bottom = int(rect.position.y + rect.size.y)
 
 func Fog():
+	
 	if get_meta("NoFog") != PreviousNoFog:
 		
 		if get_meta("NoFog") == true:
@@ -24,43 +31,123 @@ func Fog():
 				var i2:float = float(i)/10
 				
 				
-				$CanvasLayer/ColorRect.set_instance_shader_parameter("ambient",i2)
+				$CanvasLayer/FlashlightRect.set_instance_shader_parameter("ambient",i2)
 				await get_tree().process_frame
 			PreviousNoFog = true
 		if get_meta("NoFog") == false:
 			for i in range(11,-1,-1):
 				var i2:float = float(i)/10
 				print(i2)
-				$CanvasLayer/ColorRect.set_instance_shader_parameter("ambient",i2)
+				$CanvasLayer/FlashlightRect.set_instance_shader_parameter("ambient",i2)
 				await get_tree().process_frame
 			PreviousNoFog = false
 	
 
 var SlidingOnce = false
 var SlideCooldown = false
+var SlotUsing = 0 
 func AssaultRifle():
 
 	var gun = find_child(Equipped)
 	gun.Enabled = true
 	gun.find_child("Gun").visible = true
-
 func Pistol():
 	var gun = find_child(Equipped)
 	gun.Enabled = true
 	gun.find_child("Gun").visible = true 
 var  sliding = false
+func _swing_knife() -> void:
+	Knife.Enabled = true
+	Knife.visible = true
+
+	# Direction from player/knife to mouse
+	var dir: Vector2 = get_global_mouse_position() - Knife.global_position
+	var angle_rad: float = dir.angle()
+	var angle_deg: float = rad_to_deg(angle_rad)
+
+
+	var start_angle: float = angle_deg - 90.0
+	var end_angle: float = angle_deg + 90.0
+
+
+
+	# Start the knife at the beginning of the arc
+	Knife.rotation_degrees = start_angle
+
+	tween = create_tween()
+	tween.tween_property(Knife, "rotation_degrees", end_angle, 0.2)
+
+	tween.finished.connect(func ():
+		Knife.Enabled = false
+		Knife.visible = false
+	)
 func _input(event: InputEvent) -> void:
-	if event.is_action("PrimaryEquip"):
+	
+	if event.is_action_pressed("Melee")  && not Knife.Enabled :
+		_swing_knife()
+		print("fwiufuiwfwiuefwiufiwfyiuwefyv")
+		
+		
+		
+
+
+		
+	
+		
+		
+		
+		
+		
+		
+		
+	if event.is_action("PrimaryEquip") && Inventory.size() > 0:
 		if Equipped != "" && Equipped != Inventory[0]:
 			find_child(Equipped).Enabled = false 
 			find_child(Equipped).find_child("Gun").visible = false	
 		Equipped = Inventory[0]
+		SlotUsing = 0
 	if event.is_action("Slide") && sliding == false && SlideCooldown == false && input_direction.length() > 0 :
 
 		sliding = true
 		SlideCooldown  = true
 		SlideCOoldownDelay(5)
-	
+
+				
+		
+	if get_meta("Shop") == true && event.is_action_pressed("Interact") :
+			var mouse_pos: Vector2 = get_global_mouse_position()
+			var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+
+			var params := PhysicsPointQueryParameters2D.new()
+			params.position = mouse_pos
+			params.collision_mask = collision_mask          # or 0xFFFFFFFF to hit everything
+			params.collide_with_areas = true
+			params.collide_with_bodies = true
+
+			var results: Array = space_state.intersect_point(params, 32)
+			for hit in results:
+				print(hit.collider.get_parent())
+				if hit.collider.get_parent().get("Cost"):
+					if Dosh >= hit.collider.get_parent().Cost:
+						Dosh -= hit.collider.get_parent().Cost
+					
+						print("fiwefiweg")
+						if Inventory.size() == 2:
+							
+							find_child(Equipped).Enabled = false
+							find_child(Equipped).find_child("Gun").visible - false
+							Inventory[SlotUsing] = hit.collider.get_parent().GunName
+							Equipped = hit.collider.get_parent().GunName
+							find_child(Equipped).Enabled = true
+							find_child(Equipped).find_child("Gun").visible = true
+						else:
+							Inventory.append(hit.collider.get_parent().GunName)
+				
+
+				
+				
+				
+			
 		
 		
 	if event.is_action_released("Slide"):
@@ -69,11 +156,13 @@ func _input(event: InputEvent) -> void:
 		SlidingOnce = false
 		
 	if event.is_action("SecondaryEquip"):
-		if Equipped != "" && Equipped != Inventory[1]:
-			find_child(Equipped).Enabled = false 
-			find_child(Equipped).find_child("Gun").visible = false
-			
-		Equipped = Inventory[1]
+		if Inventory.size() >=2:
+			if Equipped != "" && Equipped != Inventory[1]:
+				find_child(Equipped).Enabled = false 
+				find_child(Equipped).find_child("Gun").visible = false
+			SlotUsing = 1
+				
+			Equipped = Inventory[1]
 	
 
 func on_tween_finished():
@@ -82,10 +171,17 @@ func on_tween_finished():
 var PreviousNoFog = false
 func SetAmount(v:float):
 	Speed = v
-
-
+var tween = null
+var Knife = null
+@export var SelectingGun = null
 func _ready() -> void:
-	pass
+	
+	tween = create_tween()
+	Knife = find_child("Knife")
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	get_viewport().canvas_cull_mask = 1 << 0
+	#get_viewport().canvas_cull_mask = 1 << 0
+
 var input_direction = Vector2.ZERO
 var SlideTween = null
 var sliding_prev := false
@@ -93,17 +189,23 @@ func SlideCOoldownDelay(timeout):
 	await get_tree().create_timer(timeout).timeout
 	SlideCooldown = false
 var gun = "a"
+
 func _physics_process(delta: float) -> void:
-	# --- remove these lines ---
-	# SlideTween = create_tween().set_ease(...).set_trans(...).set_parallel(true)
-	# SlideTween.connect("finished", on_tween_finished)
+
+			
+			
+
+		
 
 	$CanvasLayer/SubViewportContainer/SubViewport.world_2d = get_tree().root.world_2d
 	$CanvasLayer/SubViewportContainer/SubViewport/Camera2D.global_position = global_position
 
 	Fog()
 	var current_fps = Engine.get_frames_per_second()
-	$CanvasLayer/RichTextLabel.text = "FPS: " + str(current_fps)
+
+	#$CanvasLayer/RichTextLabel.text = "FPS: " + str(current_fps)
+	$CanvasLayer/RichTextLabel.text = "Health: " + str(get_meta("Health"))
+	$CanvasLayer/RichTextLabel2.text = "Dosh: " + str(Dosh)
 	if Equipped != LastEquipped:
 		LastEquipped = Equipped
 		WeaponsDict[Equipped].call()
