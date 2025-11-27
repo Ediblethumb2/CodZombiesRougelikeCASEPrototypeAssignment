@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctfhvobeitpr4"
-path="res://.godot/imported/AK-removebg-preview.png-f752daf75a30866761d62c417c1b46d7.ctex"
+uid="uid://dsp4kvin1xxfv"
+path="res://.godot/imported/02_kerenel_Cards.png-5c46e69fb50f58edb55c1faa532622a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://AK-removebg-preview.png"
-dest_files=["res://.godot/imported/AK-removebg-preview.png-f752daf75a30866761d62c417c1b46d7.ctex"]
+source_file="res://Gun,CardSprites/02_kerenel_Cards.png"
+dest_files=["res://.godot/imported/02_kerenel_Cards.png-5c46e69fb50f58edb55c1faa532622a5.ctex"]
 
 [params]
 

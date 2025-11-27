@@ -19,12 +19,12 @@ func _process(delta: float) -> void:
 
 
 func _on_area_2d_mouse_entered() -> void:
-	$CostLabel.text = str(Cost)
+	#$CostLabel.text = str(Cost)
 	Player.SelectingGun = self
 	print("Entered")
 
 
 func _on_area_2d_mouse_exited() -> void:
-	$CostLabel.text = ""
+	#$CostLabel.text = ""
 	Player.SelectingGun = null
 	print("Exited")

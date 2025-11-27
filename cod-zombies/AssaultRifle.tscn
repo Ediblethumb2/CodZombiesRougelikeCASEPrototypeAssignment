@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c7rsvrxnevbve"]
 
 [ext_resource type="Script" uid="uid://dkl4n8gaba5gu" path="res://assault_rifle.gd" id="1_s47gi"]
-[ext_resource type="Texture2D" uid="uid://ctfhvobeitpr4" path="res://AK-removebg-preview.png" id="2_s47gi"]
+[ext_resource type="Texture2D" uid="uid://ctfhvobeitpr4" path="res://Gun,CardSprites/AK-removebg-preview.png" id="2_s47gi"]
 
 [node name="AssaultRifle" type="Node2D"]
 script = ExtResource("1_s47gi")

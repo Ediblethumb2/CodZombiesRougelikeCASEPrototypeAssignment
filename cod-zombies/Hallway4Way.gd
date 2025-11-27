@@ -22,7 +22,7 @@ func _ready() -> void:
 var EnemyNames = ["Cat"]
 var Modnames = ["Fast","Tanky"]
 var AppliedMod = false
-
+var Count = 0
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	
@@ -32,7 +32,7 @@ func _process(delta: float) -> void:
 		$RoomLayer/RichTextLabel.text = str($RoomLayer.get_meta("Budget"))
 		onlyonce = true
 	if $RoomLayer.has_meta("Budget"):
-		print($RoomLayer.get_meta("Budget"))
+	
 		if $RoomLayer.get_meta("Budget") < 4:
 			AppliedMod = false 
 			set_process(false)
@@ -53,11 +53,14 @@ func _process(delta: float) -> void:
 					for Spawns in $RoomLayer/Spawn.get_children():
 						if not Spawns.has_meta("Occupied"):
 							Spawn = Spawns
+							Count += 1
 							break
 					
+					if Count >= $RoomLayer/Spawn.get_children().size() :
+						break
 					EnemyOBJ.global_position = Spawn.global_position
 					EnemyOBJ.set_meta("Depth",$RoomLayer.get_meta("depth"))
-					print($RoomLayer.get_meta("depth"))
+				
 					Spawn.set_meta("Occupied",true)
 					
 					EnemyOBJ.Spawn = Spawn

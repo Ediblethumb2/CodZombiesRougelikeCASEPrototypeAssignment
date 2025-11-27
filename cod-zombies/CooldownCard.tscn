@@ -1,18 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://ylvmyw8mql73"]
+[gd_scene load_steps=4 format=3 uid="uid://dty40pqig10t0"]
 
-[ext_resource type="Script" uid="uid://dkwr06c4iporm" path="res://AKShop.gd" id="1_atmcy"]
-[ext_resource type="Texture2D" uid="uid://ctfhvobeitpr4" path="res://Gun,CardSprites/AK-removebg-preview.png" id="2_n8m47"]
+[ext_resource type="Script" uid="uid://dkwr06c4iporm" path="res://AKShop.gd" id="1_s6i0n"]
+[ext_resource type="Texture2D" uid="uid://dsp4kvin1xxfv" path="res://Gun,CardSprites/02_kerenel_Cards.png" id="2_63sby"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jpu0a"]
 radius = 46.8722
 
-[node name="AssaultRifle" type="Node2D"]
-script = ExtResource("1_atmcy")
+[node name="CooldownCard" type="Node2D"]
+script = ExtResource("1_s6i0n")
 
-[node name="Gun" type="Sprite2D" parent="."]
-z_index = 2
-scale = Vector2(0.3, 0.3)
-texture = ExtResource("2_n8m47")
+[node name="02KerenelCards" type="Sprite2D" parent="."]
+texture = ExtResource("2_63sby")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 128
@@ -22,6 +20,7 @@ collision_mask = 128
 shape = SubResource("CircleShape2D_jpu0a")
 
 [node name="CostLabel" type="RichTextLabel" parent="."]
+z_index = 5
 offset_right = 40.0
 offset_bottom = 40.0
 

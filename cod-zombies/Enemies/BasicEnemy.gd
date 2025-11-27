@@ -6,7 +6,8 @@ const JUMP_VELOCITY = -400.0
 @export var  MovementSpeed = 400
 var ViewAngleDegrees = 90
 var TILE_SIZE = 64
-@export var KillMoney = 5
+@export var BaseKillMoney: int = 5
+var KillMoney: int = 0
 @export var BaseHealth: float = 100.0  
 @export var view_distance = 6 * TILE_SIZE
 var Debounce = false
@@ -14,7 +15,8 @@ func _ready():
 	#set_physics_process(false)
 	Goal = get_tree().get_current_scene().find_child("Player")
 	HealthMultiplier()
-	print("hEALTH IS " + str(get_meta("Health")))
+	Player = get_tree().get_current_scene().find_child("Player")
+	
 	
 var Direction = Vector2	(0,0)
 var State = ""
@@ -63,12 +65,22 @@ var AttackingCooldown = false
 var PlayerEntered = false
 func HealthMultiplier():
 	if get_meta("Depth") <= 9:
-		set_meta("Health",BaseHealth + (100 * get_meta("Depth")))
+		set_meta("Health",BaseHealth + (50 * get_meta("Depth")))
 	else: 
 		var hp = 1000
 		for i in range(10,get_meta("Depth")):
 			hp *= 1.1
 			set_meta("Health",hp)
+	var money: float
+
+	if get_meta("Depth") <= 9:
+		KillMoney = float(BaseKillMoney) + 2.0 * get_meta("Depth")
+	else:
+		money = float(BaseKillMoney) + 2.0 * 9
+		for i in range(10, get_meta("Depth")):
+			money *= 1.05  
+	
+			KillMoney = int(round(money))
 	
 	
 		
@@ -90,9 +102,10 @@ func _physics_process(delta: float) -> void:
 			print("Started chasing")
 			Chasing = true
 
-		# --- MOVEMENT SHOULD ALWAYS RUN WHILE WE SEE THE PLAYER ---
+		
 		if get_meta("Health") <= 0:
 			queue_free()
+			print("KillMoneyIs" + str(KillMoney))
 			Player.Dosh += KillMoney
 
 		if get_meta("Fast") == true and OnlyOnce == false:
@@ -188,7 +201,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		PlayerEntered = false
-	
+		Player = body
 		#set_physics_process(false)
 
 		#Goal = Spawn

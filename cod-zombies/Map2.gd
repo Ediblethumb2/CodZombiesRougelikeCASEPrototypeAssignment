@@ -6,6 +6,7 @@ var FourWay = preload("res://Hallway4Way.tscn")
 var Wall = preload("res://Wall.tscn")
 var Shop = preload("res://shop.tscn")
 var TreasureRoom = preload("res://TreasureRoom.tscn")
+var CardShop = preload("res://CardShop.tscn")
 var hallways = [Room,FourWay]
 var SpecialRoom = [Shop,TreasureRoom]
 var SpecialRoomPolygons = [Shop.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon,TreasureRoom.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
@@ -463,7 +464,14 @@ func FillMap() -> void:
 			var Weighting = SpecialRoomWeighting[SpecialRoomObj.name]
 			
 			if randi() % Weighting == 1:
-
+				if SpecialRoomObj.name == "Shop":
+					var Chance = randi() &3
+					
+					if Chance == 2:
+						
+						SpecialRoomObj = CardShop.instantiate() as Node2D
+						
+						
 				SpecialRoomPlacing = true
 		
 				
@@ -484,12 +492,13 @@ func FillMap() -> void:
 				var R_180    := Transform2D(PI, Vector2.ZERO)
 				var T_roomlayer := T_marker * R_180 * T_conn.affine_inverse()
 					# collision polygon in world-space
-				var local_poly : PackedVector2Array = SpecialRoomDupePolygons[SpecialRoomDupe.find(RoomPack)]
+				var local_poly : PackedVector2Array = SpecialRoomObj.find_child("CollisionPolygon2D").polygon
 				var world_poly := _xform_poly(T_roomlayer, local_poly)
 
 					# overlap test against all placed polys
 					
 				points = world_poly
+				print(SpecialRoomObj.name)
 				Polygon2Dd.reparent(Hallway.find_child("RoomLayer"))
 				Polygon2Dd.polygon = points
 				drawable = true

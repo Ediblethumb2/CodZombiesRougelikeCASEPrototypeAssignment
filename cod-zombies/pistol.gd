@@ -7,7 +7,7 @@ var Direction = Vector2.ZERO
 var Bullet = preload("res://Bullet.tscn")
 var target
 var shot = false
-@export var CooldownTime = 0.7
+@export var Cooldown = 0.7
 @export var Damage = 20
 @export var Enabled = false
 func _input(event):
@@ -15,7 +15,7 @@ func _input(event):
 				
 func ShootCooldown():
 	if shot == true:
-		await get_tree().create_timer(CooldownTime).timeout
+		await get_tree().create_timer(Cooldown).timeout
 		shot = false	
 				
 				

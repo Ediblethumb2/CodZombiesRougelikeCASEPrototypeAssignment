@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dadk8aqsddjg0"]
 
-[ext_resource type="Texture2D" uid="uid://ctfhvobeitpr4" path="res://AK-removebg-preview.png" id="1_7jnf1"]
+[ext_resource type="Texture2D" uid="uid://ctfhvobeitpr4" path="res://Gun,CardSprites/AK-removebg-preview.png" id="1_7jnf1"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="2_q46f3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fduof"]

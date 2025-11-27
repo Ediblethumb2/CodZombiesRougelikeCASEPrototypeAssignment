@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cn57khka3p178"]
 
 [ext_resource type="Script" uid="uid://bve735r505027" path="res://PistolShop.gd" id="1_op5jx"]
-[ext_resource type="Texture2D" uid="uid://bwnii3nc5m5m6" path="res://Screenshot_2025-10-01_121003-removebg-preview.png" id="2_uw71q"]
+[ext_resource type="Texture2D" uid="uid://bwnii3nc5m5m6" path="res://Gun,CardSprites/Pistol.png" id="2_uw71q"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_op5jx"]
 radius = 41.1947
@@ -17,6 +17,8 @@ texture = ExtResource("2_uw71q")
 
 [node name="Area2D" type="Area2D" parent="."]
 z_index = 4096
+collision_layer = 128
+collision_mask = 128
 collision_priority = 500.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]

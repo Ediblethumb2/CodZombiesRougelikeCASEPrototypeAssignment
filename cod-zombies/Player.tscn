@@ -168,3 +168,46 @@ offset_top = -40.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "fdf"
+
+[node name="Description" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Frame" type="ColorRect" parent="CanvasLayer/Description"]
+z_index = 4096
+layout_mode = 0
+offset_left = 99.0
+offset_top = 36.0
+offset_right = 350.0
+offset_bottom = 446.0
+color = Color(0, 0, 0, 1)
+
+[node name="Name" type="Label" parent="CanvasLayer/Description/Frame"]
+z_index = 4096
+layout_mode = 0
+offset_left = 82.0
+offset_top = 3.0
+offset_right = 172.0
+offset_bottom = 45.0
+text = "AR"
+
+[node name="Description" type="Label" parent="CanvasLayer/Description/Frame"]
+z_index = 4096
+layout_mode = 0
+offset_left = 5.0
+offset_top = 199.0
+offset_right = 95.0
+offset_bottom = 241.0
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Description/Frame"]
+z_index = 4096
+position = Vector2(127, 127)
+
+[node name="Cost" type="Label" parent="CanvasLayer/Description/Frame"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 356.0
+offset_right = 123.0
+offset_bottom = 442.0
