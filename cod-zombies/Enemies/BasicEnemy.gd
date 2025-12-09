@@ -7,9 +7,11 @@ const JUMP_VELOCITY = -400.0
 var ViewAngleDegrees = 90
 var TILE_SIZE = 64
 @export var BaseKillMoney: int = 5
+@export var Health = 100
 var KillMoney: int = 0
 @export var BaseHealth: float = 100.0  
 @export var view_distance = 6 * TILE_SIZE
+
 var Debounce = false
 func _ready():
 	#set_physics_process(false)
@@ -29,6 +31,9 @@ func can_see_player() -> bool:
 	# Vector from enemy to player
 	var to_player: Vector2 = Goal.global_position - global_position
 	var dist := to_player.length()
+	
+	if dist < 100:
+		return true
 	if dist > view_distance:
 		return false  # too far
 	
@@ -65,12 +70,12 @@ var AttackingCooldown = false
 var PlayerEntered = false
 func HealthMultiplier():
 	if get_meta("Depth") <= 9:
-		set_meta("Health",BaseHealth + (50 * get_meta("Depth")))
+		Health = BaseHealth + (50 * get_meta("Depth"))
 	else: 
 		var hp = 1000
 		for i in range(10,get_meta("Depth")):
 			hp *= 1.1
-			set_meta("Health",hp)
+			Health = hp
 	var money: float
 
 	if get_meta("Depth") <= 9:
@@ -84,17 +89,36 @@ func HealthMultiplier():
 	
 	
 		
-	
+var can_see = null
+
 func _physics_process(delta: float) -> void:
+
+	if Health <= 0 && State == ""	||Health <= 0 && State != "Death" :
+		
+		State = "Death"
+		print("KillMoneyIs" + str(KillMoney))
+		Player.Dosh += KillMoney
+		$AnimatedSprite2D.play("DeathD")
+		
+		
 	if Goal == null:
 		return
-
+	
 	var dist = (global_position - Goal.global_position).length()
 	var can_see = dist < 300 and can_see_player()
+	
 	if Chasing == true && dist > 500:
+		Goal = Spawn
+	if Goal == Spawn && dist < 50:
 		Chasing = false
-		print("fALSE")
+		Goal = Player
+	
+		
+		
+
+
 	if can_see || Chasing == true:
+
 		if not OnlyOnceTimer:
 			OnlyOnceTimer = true
 			$Timer.autostart = true
@@ -102,11 +126,7 @@ func _physics_process(delta: float) -> void:
 			print("Started chasing")
 			Chasing = true
 
-		
-		if get_meta("Health") <= 0:
-			queue_free()
-			print("KillMoneyIs" + str(KillMoney))
-			Player.Dosh += KillMoney
+
 
 		if get_meta("Fast") == true and OnlyOnce == false:
 			OnlyOnce = true
@@ -115,11 +135,12 @@ func _physics_process(delta: float) -> void:
 			KillMoney *= 2
 
 		if get_meta("Tanky") == true and OnlyOnce == false:
-			set_meta("Health", get_meta("Health") * 2)
+			Health *= 2
 			OnlyOnce = true
 			$RichTextLabel.text = "Tank"
 			KillMoney *= 5
-
+	
+			
 		if not $NavigationAgent2D.is_target_reached():
 			var NavPointDirection = ($NavigationAgent2D.get_next_path_position() - global_position).normalized()
 
@@ -129,7 +150,7 @@ func _physics_process(delta: float) -> void:
 			else:
 				Direction = Vector2(0, sign(NavPointDirection.y))
 			
-			if PlayerEntered == true&& AttackingCooldown == false:
+			if PlayerEntered == true&& AttackingCooldown == false && State != "Death":
 				if Direction == Vector2(-1, 0):
 					$AnimatedSprite2D.play("AttackLR")
 					$AnimatedSprite2D.flip_h = false
@@ -141,8 +162,24 @@ func _physics_process(delta: float) -> void:
 				elif Direction == Vector2(0, 1):
 					$AnimatedSprite2D.play("AttackD")
 				State = "Attacking"
-		
-			if State != "Attacking":
+			if State == "Death":
+				if Direction == Vector2(-1, 0):
+					$AnimatedSprite2D.play("DeathLR")
+					$AnimatedSprite2D.flip_h = false
+				elif Direction == Vector2(1, 0):
+					$AnimatedSprite2D.play("DeathLR")
+					$AnimatedSprite2D.flip_h = true
+				elif Direction == Vector2(0, -1):
+					$AnimatedSprite2D.play("DeathU")
+				elif Direction == Vector2(0, 1):
+					$AnimatedSprite2D.play("DeathD")
+				$Timer.autostart = false
+				$Timer.stop()
+				OnlyOnceTimer = false
+				velocity = Vector2.ZERO
+				set_physics_process(false)
+				
+			if State != "Attacking" && State != "Death":
 				State = "Run"
 				if Direction == Vector2(-1, 0):
 					$AnimatedSprite2D.play("RunLR")
@@ -161,14 +198,14 @@ func _physics_process(delta: float) -> void:
 				velocity = NavPointDirection * MovementSpeed
 				move_and_slide()
 
-			if State == "Attacking":
+			if State == "Attacking" && State != "Death":
 				velocity = NavPointDirection * MovementSpeed
 				move_and_slide()
 				
 	else:
 		# Lost sight / out of range -> stop timer + reset
 		if OnlyOnceTimer && Chasing == false:
-		
+			
 			$Timer.autostart = false
 			$Timer.stop()
 			OnlyOnceTimer = false
@@ -185,18 +222,7 @@ func _on_timer_timeout() -> void:
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	
-	
-	if body.name == "Player":
-		Goal = body
-	
-		PlayerEntered = true
-		Player =  body
-		
-		#set_physics_process(true)
 		pass
-	
-
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
@@ -211,7 +237,8 @@ func _on_animated_sprite_2d_frame_changed() -> void:
 	
 	if State == "Attacking" && $AnimatedSprite2D.frame == 4:
 		if PlayerEntered == true:
-			Goal.set_meta("Health",Goal.get_meta("Health")-10)
+			Goal.Health -= 10
+			
 
 
 		
@@ -236,3 +263,29 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	if State == "Attacking":
 		State = "Run"
 		AttackingCooldown = true
+	if State == "Death":
+		queue_free()
+
+
+func _on_activation_area_body_entered(body: Node2D) -> void:
+
+	
+	if body.name == "Player":
+		Goal = body
+		
+		PlayerEntered = true
+		Player =  body
+		Chasing = true
+		
+		#set_physics_process(true)
+		pass
+	
+
+
+func _on_activation_area_body_exited(body: Node2D) -> void:
+		if body.name == "Player":
+			PlayerEntered = false
+			Player = body
+		#set_physics_process(false)
+
+		#Goal = Spawn

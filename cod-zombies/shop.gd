@@ -9,6 +9,11 @@ var Guns := {
 		"BasePrice": 30.0,
 		"MinDepth": 3,
 		"Scene": preload("res://AKShop.tscn")
+	},
+	"WunderWaffe": {
+		"BasePrice": 200.0,
+		"MinDepth": 7,
+		"Scene": preload("res://WunderWaffeShop.tscn")
 	}
 }
 const DEPTHPRICESTEP := 0.60 
@@ -28,7 +33,6 @@ func get_scaled_price(gun_name: String) -> float:
 	return base_price * multiplier
 func _ready() -> void:
 	set_process(false)
-
 
 
 

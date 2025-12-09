@@ -1,10 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://c7rsvrxnevbve"]
+[gd_scene load_steps=5 format=3 uid="uid://c7rsvrxnevbve"]
 
 [ext_resource type="Script" uid="uid://dkl4n8gaba5gu" path="res://assault_rifle.gd" id="1_s47gi"]
+[ext_resource type="AudioStream" uid="uid://cfyefo15bc4nk" path="res://Audio/AssaultRifleReload.wav" id="2_bll0s"]
 [ext_resource type="Texture2D" uid="uid://ctfhvobeitpr4" path="res://Gun,CardSprites/AK-removebg-preview.png" id="2_s47gi"]
+[ext_resource type="AudioStream" uid="uid://bk6tmb61p00ny" path="res://Audio/AssaultRifleGunshot.wav" id="4_3u36u"]
 
 [node name="AssaultRifle" type="Node2D"]
 script = ExtResource("1_s47gi")
+Cooldown = 0.15
+
+[node name="AssaultRifleReload" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_bll0s")
 
 [node name="Gun" type="Sprite2D" parent="."]
 visible = false
@@ -12,3 +18,20 @@ z_index = 2
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("2_s47gi")
 offset = Vector2(200, 0)
+
+[node name="AssaultRifleGunshot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_3u36u")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+visible = false
+modulate = Color(0, 0.908146, 0.690304, 1)
+z_index = 4096
+offset_left = 39.0
+offset_top = 14.0
+offset_right = 163.0
+offset_bottom = 41.0
+scale = Vector2(0.381201, 0.21092)
+theme_override_font_sizes/font_size = 0
+show_percentage = false
+
+[connection signal="finished" from="AssaultRifleReload" to="." method="_on_assault_rifle_reload_finished"]

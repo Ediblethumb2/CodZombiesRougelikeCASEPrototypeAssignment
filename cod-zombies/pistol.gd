@@ -6,6 +6,7 @@ const JumpVelocity = -400.0
 var Direction = Vector2.ZERO
 var Bullet = preload("res://Bullet.tscn")
 var target
+@export var Ammo = 10
 var shot = false
 @export var Cooldown = 0.7
 @export var Damage = 20
@@ -64,7 +65,7 @@ func _physics_process(delta: float) -> void:
 					NewObject.set_meta("DirX",dir.x)
 					NewObject.set_meta("DirY",dir.y)
 					NewObject.global_position = global_position + 100* ( get_global_mouse_position() - global_position).normalized()
-					get_parent().get_parent().add_child(NewObject)
+					get_parent().get_parent().get_parent().add_child(NewObject)
 					
 		if target:
 			Input.warp_mouse(get_viewport().get_mouse_position().move_toward(target,10000*delta))

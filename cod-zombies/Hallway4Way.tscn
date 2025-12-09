@@ -1,9 +1,11 @@
-[gd_scene load_steps=10 format=4 uid="uid://cdbpvj4aiv3yy"]
+[gd_scene load_steps=13 format=4 uid="uid://cdbpvj4aiv3yy"]
 
 [ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_jjjct"]
 [ext_resource type="Script" uid="uid://bv2ul1g2r0uhp" path="res://Hallway4Way.gd" id="1_uuj4d"]
 [ext_resource type="Texture2D" uid="uid://5ffsfc3nyego" path="res://icon.svg" id="2_d3rus"]
 [ext_resource type="Script" uid="uid://cyhgcsfs3fk20" path="res://Hallway4WayArea2D.gd" id="3_d3rus"]
+[ext_resource type="Script" uid="uid://c8hlulmihom6m" path="res://AmmoCrate.gd" id="5_0im8v"]
+[ext_resource type="Texture2D" uid="uid://8s15ebplcmku" path="res://Sprites/AmmoCrate.png" id="6_05a3p"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_jjjct"]
 vertices = PackedVector2Array(32, 32, -32, 32, -32, -32, 32, -32)
@@ -287,6 +289,9 @@ sources/0 = SubResource("TileSetAtlasSource_d3rus")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uuj4d"]
 size = Vector2(801, 642)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_ufixt"]
+radius = 364.09
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_uuj4d")
 metadata/Difficulty = 0.0
@@ -390,8 +395,24 @@ position = Vector2(238, 346)
 [node name="Point8" type="Node2D" parent="RoomLayer/Spawn"]
 position = Vector2(424, 346)
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.05, 0.05)
+[node name="AmmoCrate" type="StaticBody2D" parent="RoomLayer"]
+collision_layer = 128
+collision_mask = 128
+script = ExtResource("5_0im8v")
+
+[node name="AmmoCrate" type="Sprite2D" parent="RoomLayer/AmmoCrate"]
+z_index = 1000
+position = Vector2(-125, -29)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("6_05a3p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/AmmoCrate"]
+position = Vector2(-125, -29)
+scale = Vector2(0.2, 0.2)
+shape = SubResource("CircleShape2D_ufixt")
+
+[node name="CameraTarget" type="Node2D" parent="RoomLayer"]
+position = Vector2(141, 120)
 
 [connection signal="body_entered" from="RoomLayer/Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_entered" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_entered"]

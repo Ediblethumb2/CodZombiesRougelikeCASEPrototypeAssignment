@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cqxluvjdtt4pj"
+path="res://.godot/imported/Wunderwaffe DG-2 Reload Sound  Animation.mp3-3811c09461736672741edc62f1e67cca.mp3str"
+
+[deps]
+
+source_file="res://Audio/Wunderwaffe DG-2 Reload Sound  Animation.mp3"
+dest_files=["res://.godot/imported/Wunderwaffe DG-2 Reload Sound  Animation.mp3-3811c09461736672741edc62f1e67cca.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

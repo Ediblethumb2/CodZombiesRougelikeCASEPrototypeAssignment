@@ -5,7 +5,7 @@ extends Node2D
 func _ready() -> void:
 	pass # Replace with function body.
 
-
+@export var Damage = 10
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	
@@ -16,6 +16,6 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.name != "Player" :
 		queue_free()
 	
-	if body.has_meta("Health"):
-		body.set_meta("Health",body.get_meta("Health")- 10)
+	if body.get("Health"):
+		body.Health -= Damage
 		

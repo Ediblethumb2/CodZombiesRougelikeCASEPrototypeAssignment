@@ -70,7 +70,8 @@ func _process(delta: float) -> void:
 							
 							$RoomLayer.set_meta("Budget",$RoomLayer.get_meta("Budget")-(ENEMIES[enemy]["cost"] * ELITE_MODS[mods]["cost_mul"]))
 							ELITE_MODS[mods]["apply"].call(EnemyOBJ)
-							add_child(EnemyOBJ)
+							get_tree().current_scene.get_node("Enemy").add_child(EnemyOBJ)
+							
 							AppliedMod  = true
 						
 							break
@@ -89,3 +90,6 @@ func _process(delta: float) -> void:
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		set_process(true)
+
+	
+			

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsp4kvin1xxfv"
-path="res://.godot/imported/02_kerenel_Cards.png-5c46e69fb50f58edb55c1faa532622a5.ctex"
+uid="uid://ds3g2aecamf3f"
+path="res://.godot/imported/S_Death.png-86d3f5f91efca3a038dced7554fa91fe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Gun,CardSprites/02_kerenel_Cards.png"
-dest_files=["res://.godot/imported/02_kerenel_Cards.png-5c46e69fb50f58edb55c1faa532622a5.ctex"]
+source_file="res://S_Death.png"
+dest_files=["res://.godot/imported/S_Death.png-86d3f5f91efca3a038dced7554fa91fe.ctex"]
 
 [params]
 

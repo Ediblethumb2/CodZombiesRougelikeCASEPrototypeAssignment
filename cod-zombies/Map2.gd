@@ -1,23 +1,24 @@
 extends Node2D
 
-
-var Room = preload("res://Room.tscn")
-var FourWay = preload("res://Hallway4Way.tscn")
-var Wall = preload("res://Wall.tscn")
-var Shop = preload("res://shop.tscn")
-var TreasureRoom = preload("res://TreasureRoom.tscn")
-var CardShop = preload("res://CardShop.tscn")
+#Preloading all rooms for instancing when generating procedurally
+var Room = load("res://Room.tscn")
+var FourWay = load("res://Hallway4Way.tscn")
+var Wall = load("res://Wall.tscn")
+var Shop = load("res://shop.tscn")
+var TreasureRoom = load("res://TreasureRoom.tscn")
+var CardShop = load("res://CardShop.tscn")
+var DeadEnd1 = preload("res://DeadEnd.tscn")
+#Array of rooms to then be duped later on in procedural generation
 var hallways = [Room,FourWay]
 var SpecialRoom = [Shop,TreasureRoom]
-var SpecialRoomPolygons = [Shop.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon,TreasureRoom.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
-var SpecialRoomWeighting = {"Shop" : 5,"TreasureRoom" : 20}
-var DeadEnd1 = preload("res://DeadEnd.tscn")
 var DeadEnds = [DeadEnd1,Wall]
-var PolygonsDeadEnds= [DeadEnd1.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon,Wall.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
-var Polygons =[Room.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon,FourWay.instantiate().find_child("RoomLayer").find_child("CollisionPolygon2D").polygon]
+#Dictionary for the rarity of the special rooms 
+var SpecialRoomWeighting = {"Shop" : 10,"TreasureRoom" : 35}
+@onready var game_over_camera: Camera2D = $GameOverCamera
 @onready var Polygon2Dd = get_node("Polygon2D")
 var CollisionShapeRects = []
-var NextRoomID = 0 
+var NextRoomID = 0
+@export var SuccessfulRooms = 0  
 var IDByRoomlayer = {}
 var RoomLayerByID = {}
 var Edges = {}
@@ -26,9 +27,106 @@ const INF = 1_000_000_000
 var STARTID := -1
 var clause = 1    # kevin
 @onready var layer: TileMapLayer = $RoomLayer
-const SRC := 0              # <-- set to your actual TileSet source id
+const SRC := 0              # <-- source id
 const ATLAS := Vector2i(3,3) # <-- atlas coords inside that source
+func get_room_id_from_position(pos: Vector2) -> int:
+	# Loop all known rooms and see whose polygon contains the point
+	for id in RoomLayerByID.keys():
+		var room_layer: Node2D = RoomLayerByID[id]
+		var poly_local: PackedVector2Array = room_layer.get_node("CollisionPolygon2D").polygon
+		var poly_world := _xform_poly(room_layer.global_transform, poly_local)
+		
+		if Geometry2D.is_point_in_polygon(pos, poly_world):
+			return id
+	
+	return -1  # not found
+func build_room_visit_order(start_id: int) -> Array[int]:
+	var order: Array[int] = []
+	if start_id == -1 or not RoomLayerByID.has(start_id):
+		return order
 
+	var visited := {}
+	var queue: Array[int] = [start_id]
+
+	visited[start_id] = true
+
+	while not queue.is_empty():
+		var u: int = queue.pop_front()
+		order.append(u)
+
+		for v in Edges.get(u, []):
+			if not visited.has(v) and RoomLayerByID.has(v):
+				visited[v] = true
+				queue.append(v)
+
+
+	var max_rooms := 10000000000
+	if order.size() > max_rooms:
+		order = order.slice(0, max_rooms)
+
+	return order
+func build_camera_path(start_id: int) -> Array[Vector2]:
+	var ids := build_room_visit_order(start_id)
+	var path: Array[Vector2] = []
+
+	for id in ids:
+		var room_layer: Node2D = RoomLayerByID[id]
+		var target := room_layer.get_node_or_null("CameraTarget")
+		if target:
+			path.append(target.global_position)
+		else:
+			# Fallback: use RoomLayer position if no CameraTarget
+			path.append(room_layer.global_position)
+
+	return path
+func start_game_over_pan(start_room_id: int, death_pos: Vector2) -> void:
+	# Build ordered list of positions
+	var path := build_camera_path(start_room_id)
+	if path.is_empty():
+		return
+
+	# Start camera at exact death position
+	game_over_camera.global_position = death_pos
+	game_over_camera.enabled = true
+
+	var travel_time := 1.4  # seconds between rooms
+	var hold_time := 0.8    # seconds to pause on each room
+
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+
+	# Move from death pos -> centre of first room
+	tween.tween_property(
+		game_over_camera,
+		"global_position",
+		path[0],
+		travel_time
+	)
+
+	# Then room to room
+	for i in range(1, path.size()):
+		tween.tween_interval(hold_time)
+		tween.tween_property(
+			game_over_camera,
+			"global_position",
+			path[i],
+			travel_time
+		)
+
+	# Hold on last room, then finish
+	tween.tween_interval(hold_time)
+	tween.tween_callback(Callable(self, "_on_game_over_pan_finished"))
+func OnPlayerDied(death_pos: Vector2) -> void:
+	
+	
+	
+	# Figure out which room they died in
+	var room_id := get_room_id_from_position(death_pos)
+	if room_id == -1:
+		room_id = STARTID  # fallback so it still runs
+
+	start_game_over_pan(room_id, death_pos)
 var grid: AStarGrid2D
 var cells: Array[Vector2i]    # path in MAP COORDS (no pixels)
 func AddRoom(RoomLayer):
@@ -40,7 +138,7 @@ func AddRoom(RoomLayer):
 	RoomLayerByID[ID] = RoomLayer
 	Edges[ID] = []
 	Depth[ID] = INF
-	RoomLayer.set_meta("RoomID",ID)
+	RoomLayer.set_meta("RoomId",ID)
 	return ID
 func Connect(a_id: int, b_id: int):
 	if not Edges.has(a_id): Edges[a_id] = []
@@ -96,7 +194,7 @@ func _ready() -> void:
 	
 	var start_layer := $Node2D/RoomLayer
 	STARTID = AddRoom(start_layer)
-# Player.gd (_ready)
+
 func SetupGrid():
 	grid.region = Rect2i(-2500, -2500, 5000,5000)
 	grid.cell_size = Vector2i(64,64)
@@ -177,7 +275,7 @@ var points = []
 var drawable  = false
 
 var markerrunning = false
-var successfulrooms = 0
+
 var placing = false
 var _spawning := false
 var SpecialRooms = 0
@@ -215,14 +313,15 @@ func FindPaths():
 				continue
 			
 		
-			
+var current_room_id: int = -1
+
+func set_current_room(id: int) -> void:
+	current_room_id = id			
 func FillDeadEnd():
-	if _spawning:
-		return
+
 	_spawning = true
 
 	var DeadEndDupe = DeadEnds.duplicate()
-	var PolygonsDeadEndsDupe = PolygonsDeadEnds.duplicate()
 	for Hallway in get_children():
 		if not (Hallway is Node2D):
 			continue
@@ -234,8 +333,9 @@ func FillDeadEnd():
 		# gather only free markers
 		var free_markers : Array[Node2D] = []
 		for m in control.get_children():
-			if m.get_meta("Occupied") == false || m.get_meta("Searchable") == true:
+			if m.get_meta("Searchable") == true and m.get_meta("Occupied", false) == false:
 				free_markers.append(m)
+			
 		if free_markers.is_empty():
 			continue
 		
@@ -244,19 +344,18 @@ func FillDeadEnd():
 
 		while true:
 			await get_tree().physics_frame
+			if DeadEndDupe.is_empty():
+					# Nothing fits here, give up on this marker
+					marker.set_meta("Searchable", false)
+					_spawning = false
+					break
+
 			var room_packed : PackedScene = DeadEndDupe.pick_random()
 			var obj := room_packed.instantiate() as Node2D
 		
 		
-			var new_ctrl := obj.find_child("RoomLayer").find_child("Control")
-			var free_conns : Array[Node2D] = []
-			for c in new_ctrl.get_children():
-				if  c.get_meta("Occupied") == false || c.get_meta("Searchable") == true:
-					free_conns.append(c)
-			if free_conns.is_empty():
-				obj.queue_free()
-				continue
-			var new_conn : Node2D = free_conns.pick_random()
+			var new_ctrl := obj.find_child("RoomLayer").find_child("Control").get_children()
+			var new_conn : Node2D = new_ctrl.pick_random()
 		# compute transform to glue connectors (180° flip)
 			var T_marker := Transform2D(marker.global_rotation, marker.global_position)
 			
@@ -265,7 +364,7 @@ func FillDeadEnd():
 			var R_180    := Transform2D(PI, Vector2.ZERO)
 			var T_roomlayer := T_marker * R_180 * T_conn.affine_inverse()
 			# collision polygon in world-space
-			var local_poly : PackedVector2Array = PolygonsDeadEndsDupe[DeadEndDupe.find(room_packed)]
+			var local_poly : PackedVector2Array = obj.get_node("RoomLayer").get_node("CollisionPolygon2D").polygon
 			var world_poly := _xform_poly(T_roomlayer, local_poly)
 
 			# overlap test against all placed polys
@@ -286,13 +385,9 @@ func FillDeadEnd():
 
 			if overlaps:
 				
-				marker.set_meta("Occupied",true)
-				marker.set_meta("Searchable",true)
-			
 				obj.queue_free()
-			
 				DeadEndDupe.erase(DeadEndDupe.find(room_packed))
-				PolygonsDeadEndsDupe.erase(DeadEndDupe.find(room_packed))
+	 
 				continue
 				
 
@@ -313,7 +408,7 @@ func FillDeadEnd():
 			
 			Rects.append(world_poly)
 			CollisionShapeRects.append(obj.find_child("RoomLayer"))
-			successfulrooms += 1
+			SuccessfulRooms += 1
 			
 			marker.set_meta("Occupied", true)
 			marker.set_meta("Searchable",false)
@@ -329,9 +424,12 @@ var SpecialRoomPlacing  = false
 var overlapsspecialroom = false
 var ForcePlace = false
 var SpecialRoomObj = null
+var fill_fail_streak := 0
+const MAX_FILL_FAILS := 40  
+var main_phase_done := false
 func DepthBudgetCurve(depth:int) -> float:
-	var L := 80.0      # asymptote (late game budget ceiling)
-	var k := 0.5       # slope
+	var L := 1000    # asymptote (late game budget ceiling)
+	var k := 0.7    # slope
 	var m := 8.0       # midpoint depth
 	return 12.0 + L / (1.0 + exp(-k * float(depth - m)))
 # Returns the connector's transform RELATIVE to the RoomLayer it belongs to.
@@ -347,15 +445,25 @@ func _solve_roomlayer_xform(marker: Node2D, conn: Node2D) -> Transform2D:
 	var R_180 := Transform2D(PI, Vector2.ZERO)
 	# RoomLayer_world * T_conn_rel = T_marker * R_180
 	return T_marker * R_180 * T_conn_rel.affine_inverse()
+func CountDeadEndMarkers() -> int:
+	var count := 0
+	for h in get_children():
+		if h is Node2D:
+			var control := h.get_node_or_null("RoomLayer/Control")
+			if control:
+				for m in control.get_children():
+					# Occupied AND still searchable = blocked connector (dead-end candidate)
+					if m.get_meta("Searchable") == true and m.get_meta("Occupied", false) == false:
+						count += 1
+	return count
 
+func FillMap() -> bool:
 
-func FillMap() -> void:
-	if _spawning:
-		return
 	_spawning = true
-
+	
 	var HallwayDupe = hallways.duplicate()
-	var HallwayDupePolygons  = Polygons.duplicate()
+
+	var placed_something := false
 	for Hallway in get_children():
 		if not (Hallway is Node2D):
 			continue
@@ -363,22 +471,23 @@ func FillMap() -> void:
 		var control := Hallway.get_node("RoomLayer/Control")
 		if control == null:
 			continue
-	
+		
+		
 		# gather only free markers
 		var free_markers : Array[Node2D] = []
 		for m in control.get_children():
-			if not m.get_meta("Occupied", false):
+			if not m.get_meta("Occupied", false) and not m.get_meta("Searchable", false):
 				free_markers.append(m)
+
 		if free_markers.is_empty():
 			continue
-
+		
 		var marker : Node2D = free_markers.pick_random()
 		if SpecialRooms < 10 && (marker.global_position - $Node2D/RoomLayer.global_position).length() > 5000:
-			SpecialRoomWeighting = {"Shop" : 5,"TreasureRoom" : 20}
+			SpecialRoomWeighting = {"Shop" : 10,"TreasureRoom" : 35}
 		else:
-			SpecialRoomWeighting = {"Shop" : 5,"TreasureRoom" : 20}
-			
-			
+			SpecialRoomWeighting = {"Shop" : 10,"TreasureRoom" : 35}
+	
 		if overlapsspecialroom == true && SpecialRoomPlacing == true:
 					
 					var new_ctrl = SpecialRoomObj.find_child("RoomLayer").find_child("Control")
@@ -443,31 +552,33 @@ func FillMap() -> void:
 						Connect(SRCID,NewID)
 						CollisionShapeRects.append(SpecialRoomObj.find_child("RoomLayer"))
 						Rects.append(world_poly)
-						successfulrooms += 1
+						SuccessfulRooms += 1
 						
 						marker.set_meta("Occupied", true)
 						marker.set_meta("Searchable",false)
 						new_conn.set_meta("Occupied", true)
 						new_conn.set_meta("Searchable",false)
 						_spawning = false
-						_spawning = false
+					
 						SpecialRoomPlacing = false
 						overlapsspecialroom   = false 
+						placed_something = true
 					
-						break  # only one placement per FillMap() call
-			
-		if SpecialRooms < 25 && overlapsspecialroom == false && SpecialRoomPlacing == false:
+					
+
+		if SpecialRooms < 50 && overlapsspecialroom == false && SpecialRoomPlacing == false:
 			var SpecialRoomDupe = SpecialRoom.duplicate()
-			var SpecialRoomDupePolygons = SpecialRoomPolygons.duplicate()
+
 			var RoomPack = SpecialRoomDupe.pick_random()
 			SpecialRoomObj = RoomPack.instantiate() as Node2D
 			var Weighting = SpecialRoomWeighting[SpecialRoomObj.name]
 			
 			if randi() % Weighting == 1:
 				if SpecialRoomObj.name == "Shop":
-					var Chance = randi() &3
 					
-					if Chance == 2:
+					var Chance = randi() &1
+				
+					if Chance == 0:
 						
 						SpecialRoomObj = CardShop.instantiate() as Node2D
 						
@@ -498,7 +609,7 @@ func FillMap() -> void:
 					# overlap test against all placed polys
 					
 				points = world_poly
-				print(SpecialRoomObj.name)
+			
 				Polygon2Dd.reparent(Hallway.find_child("RoomLayer"))
 				Polygon2Dd.polygon = points
 				drawable = true
@@ -516,7 +627,7 @@ func FillMap() -> void:
 						
 	
 			
-				
+					
 					continue
 						
 
@@ -536,24 +647,27 @@ func FillMap() -> void:
 				Connect(SRCID,NewID)
 				CollisionShapeRects.append(SpecialRoomObj.find_child("RoomLayer"))
 				Rects.append(world_poly)
-				successfulrooms += 1
+				SuccessfulRooms += 1
 					
 				marker.set_meta("Occupied", true)
 				marker.set_meta("Searchable",false)
 				new_conn.set_meta("Occupied", true)
 				new_conn.set_meta("Searchable",false)
 				_spawning = false
-				_spawning = false
+			
 				SpecialRoomPlacing = false
 				overlapsspecialroom   = false 
-				
+				placed_something = true
 				break  # only one placement per FillMap() call
 			
 					
-				
+		
+		
 		if SpecialRoomPlacing == false:
+			
 			while HallwayDupe.size() > 0:
 				await get_tree().physics_frame
+				
 				
 				var room_packed : PackedScene = HallwayDupe.pick_random()
 				var obj := room_packed.instantiate() as Node2D
@@ -562,10 +676,13 @@ func FillMap() -> void:
 				var new_ctrl := obj.find_child("RoomLayer").find_child("Control")
 				var free_conns : Array[Node2D] = []
 				for c in new_ctrl.get_children():
-					if  c.get_meta("Occupied") == false :
+					# IMPORTANT: default false so unset meta is treated as free
+					if c.get_meta("Occupied", false) == false:
 						free_conns.append(c)
+
 				if free_conns.is_empty():
 					obj.queue_free()
+					HallwayDupe.erase(room_packed)  # <-- remove unusable type
 					continue
 				var new_conn : Node2D = free_conns.pick_random()
 			# compute transform to glue connectors (180° flip)
@@ -576,7 +693,8 @@ func FillMap() -> void:
 				var R_180    := Transform2D(PI, Vector2.ZERO)
 				var T_roomlayer := T_marker * R_180 * T_conn.affine_inverse()
 				# collision polygon in world-space
-				var local_poly : PackedVector2Array = HallwayDupePolygons[HallwayDupe.find(room_packed)]
+				#var local_poly : PackedVector2Array = HallwayDupePolygons[HallwayDupe.find(room_packed)]
+				var local_poly = obj.get_node("RoomLayer").get_node("CollisionPolygon2D").polygon
 				var world_poly := _xform_poly(T_roomlayer, local_poly)
 
 				# overlap test against all placed polys
@@ -593,19 +711,20 @@ func FillMap() -> void:
 						
 						overlaps = true
 						
+						
 						break
 				#print(HallwayDupe.size())
 				if overlaps:
+						obj.queue_free()
 					
-					marker.set_meta("Occupied",true)
-					marker.set_meta("Searchable",true)
-				
-					obj.queue_free()
-			
-					HallwayDupe.erase(room_packed)
-					HallwayDupePolygons.erase(local_poly)
-					continue
-					
+						HallwayDupe.erase(room_packed)
+						
+						if HallwayDupe.is_empty():
+							
+							marker.set_meta("Searchable", true)  
+						continue
+
+
 								
 					
 				obj.find_child("RoomLayer").global_position = T_roomlayer.origin
@@ -623,23 +742,33 @@ func FillMap() -> void:
 				Connect(SRCID,NewID)
 				CollisionShapeRects.append(SpecialRoomObj.find_child("RoomLayer"))
 				Rects.append(world_poly)
-				successfulrooms += 1
+				SuccessfulRooms += 1
 
 					
 				marker.set_meta("Occupied", true)
 				marker.set_meta("Searchable",false)
+				
 				new_conn.set_meta("Occupied", true)
 				new_conn.set_meta("Searchable",false)
 				_spawning = false 
+				placed_something = true
 			
 				break  # only one placement per FillMap() call
-			if HallwayDupe.size() == 0 :
-				
-					DeadEndSearches += 1
 			
-			_spawning = false
-			break
+		
+	
+
+			if placed_something == true:
+				break
+			
+	return placed_something
+			
+		
+		
+		
 				
+var Attempts = 0
+var MaxAttempts = 10000
 
 						
 func _to_cell(world_pos: Vector2) -> Vector2i:
@@ -651,22 +780,42 @@ var LoopLayer = null
 var a_id = null
 var b_id = null
 var region =  null
-var SuccessfulDeadEnds = 0
+@export var SuccessfulDeadEnds = 0
+var LastRoom = 0
 func _process(delta: float) -> void:
-	
-	if successfulrooms 	< 100:
-		
-		FillMap()
-	
-		
-	else:
-		
-		if SuccessfulDeadEnds < DeadEndSearches:
-			#FindPaths()
-			
+	if main_phase_done:
+		if DeadEndSearches == 0:
+			DeadEndSearches = CountDeadEndMarkers()
+		if SuccessfulDeadEnds < (DeadEndSearches):
 			FillDeadEnd()
+			print("fewfiuwgfuiew")
+		
 		else:
-			
+
 			FinalizeDungeon()
-			
 			set_process(false)
+		return
+
+# Phase 1: main room filling
+	if SuccessfulRooms < 400:
+		if not _has_any_free_connector():
+			main_phase_done = true
+			return
+
+		var placed = await FillMap()
+		if placed == false:
+			Attempts += 1
+		if Attempts >= MaxAttempts:
+			get_tree().reload_current_scene()
+	else:
+		main_phase_done = true
+
+func _has_any_free_connector() -> bool:
+	for h in get_children():
+		if h is Node2D:
+			var control := h.get_node_or_null("RoomLayer/Control")
+			if control:
+				for m in control.get_children():
+					if m.get_meta("Occupied") == false &&  m.get_meta("Searchable") == false: 
+						return true
+	return false

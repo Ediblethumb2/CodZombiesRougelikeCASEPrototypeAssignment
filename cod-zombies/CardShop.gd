@@ -4,10 +4,15 @@ var Cards := {
 		"BasePrice": 30.0,
 		"MinDepth": 0,
 		"Scene": preload("res://CooldownCard.tscn")
+	},
+	"ExtraDamage":{
+		"BasePrice": 60,
+		"MinDepth": 0,
+		"Scene": preload("res://ExtraDamageCard.tscn")
 	}
 }
 const DEPTHPRICESTEP := 0.60 
-var CardNames = ["CooldownReduction"]
+var CardNames = ["ExtraDamage","CooldownReduction"]
 var Pistol = null
 var Ready = false
 @export var Player = null
@@ -31,7 +36,7 @@ func _ready() -> void:
 
 
 var Spawn = null
-var GunCount = 0
+var CardCount = 0
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	
@@ -44,20 +49,20 @@ func _process(delta: float) -> void:
 				
 				continue
 			else:
-					if GunCount < 3:
-						var GunOBJ = Cards[CardName]["Scene"].instantiate()
+					if CardCount < 3:
+						var CardOBJ = Cards[CardName]["Scene"].instantiate()
 						for Spawns in $RoomLayer/Spawnpoints.get_children():
 							if Spawns.get_meta("Occupied") == false:
 								Spawn = Spawns
 								Spawns.set_meta("Occupied",true)
 								break
 							
-						GunOBJ.global_position = Spawn.global_position
-						GunOBJ.Player = Player
-						GunCount+= 1
-						add_child(GunOBJ)
+						CardOBJ.global_position = Spawn.global_position
+						CardOBJ.Player = Player
+						CardCount+= 1
+						add_child(CardOBJ)
 						var ScaledPrice = get_scaled_price(CardName)
-						GunOBJ.Cost = ScaledPrice
+						CardOBJ.Cost = ScaledPrice
 						CardNames.erase(CardName)
 						break
 
