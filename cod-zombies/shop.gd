@@ -12,12 +12,12 @@ var Guns := {
 	},
 	"WunderWaffe": {
 		"BasePrice": 200.0,
-		"MinDepth": 7,
+		"MinDepth": 0,
 		"Scene": preload("res://WunderWaffeShop.tscn")
 	}
 }
 const DEPTHPRICESTEP := 0.60 
-var GunNames = ["Pistol","AssaultRifle"]
+var GunNames = ["Pistol","AssaultRifle","WunderWaffe"]
 var Pistol = null
 var Ready = false
 @export var Player = null

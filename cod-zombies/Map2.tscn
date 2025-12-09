@@ -9,13 +9,12 @@
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_gipgj")
 
-[node name="Node2D" parent="." instance=ExtResource("2_k8vv2")]
+[node name="Hallway" parent="." instance=ExtResource("2_k8vv2")]
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(1, 0, 1, 1)
 
-[node name="ColorRect2" type="ColorRect" parent="."]
-visible = false
+[node name="Background" type="ColorRect" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -31,6 +30,7 @@ scale = Vector2(10000, 10000)
 color = Color(0, 0, 0, 1)
 
 [node name="Player" parent="." instance=ExtResource("1_ql6pm")]
+position = Vector2(171, -329)
 
 [node name="FogOfWar" type="Node2D" parent="." node_paths=PackedStringArray("fog_sprite", "player")]
 light_mask = 4
@@ -53,13 +53,9 @@ visibility_layer = 1023
 
 [node name="Enemy" type="Node2D" parent="."]
 
-[node name="Line2D" type="Line2D" parent="."]
-z_index = 1000
-points = PackedVector2Array(-8, -8, -41, 127, -79, 244, 100, 260, 180, -44, 329, -4, 329, 132, 402, 146)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="LoadingScreen" type="ColorRect" parent="CanvasLayer"]
 z_index = 1000
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,7 +65,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("6_rpcyw")
 
-[node name="BarFrame" type="ColorRect" parent="CanvasLayer/ColorRect"]
+[node name="BarFrame" type="ColorRect" parent="CanvasLayer/LoadingScreen"]
 z_index = 1000
 layout_mode = 0
 offset_left = 560.0
@@ -78,13 +74,12 @@ offset_right = 1474.0
 offset_bottom = 791.0
 color = Color(0.441533, 0.387445, 0.67856, 1)
 
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/ColorRect/BarFrame"]
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/LoadingScreen/BarFrame"]
 modulate = Color(0.107162, 0.309392, 0.235241, 1)
 self_modulate = Color(0.230415, 0.531395, 0.106883, 1)
 layout_mode = 0
 offset_right = 925.0
 offset_bottom = 97.0
-max_value = 400.0
 show_percentage = false
 
 [node name="GameOverCamera" type="Camera2D" parent="."]

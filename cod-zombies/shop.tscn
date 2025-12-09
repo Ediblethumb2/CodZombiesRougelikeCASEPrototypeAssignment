@@ -306,7 +306,7 @@ visible = false
 scale = Vector2(0.1, 0.2)
 texture = ExtResource("2_blqjs")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer"]
+[node name="OverlapPolygon" type="CollisionPolygon2D" parent="RoomLayer"]
 visible = false
 polygon = PackedVector2Array(-172, -221, -169, 293, 55, 309, 58, 267, 138, 276, 138, 308, 308, 307, 306, -234)
 

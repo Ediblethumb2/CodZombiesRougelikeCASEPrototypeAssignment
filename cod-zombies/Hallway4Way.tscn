@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://cdbpvj4aiv3yy"]
+[gd_scene load_steps=14 format=4 uid="uid://cdbpvj4aiv3yy"]
 
 [ext_resource type="Texture2D" uid="uid://b8af6mie6eh33" path="res://da3j2bf-78973af2-51ce-425b-ade0-9ad65fc4da3a.png" id="1_jjjct"]
 [ext_resource type="Script" uid="uid://bv2ul1g2r0uhp" path="res://Hallway4Way.gd" id="1_uuj4d"]
@@ -292,6 +292,9 @@ size = Vector2(801, 642)
 [sub_resource type="CircleShape2D" id="CircleShape2D_ufixt"]
 radius = 364.09
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0im8v"]
+size = Vector2(66, 59)
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_uuj4d")
 metadata/Difficulty = 0.0
@@ -352,7 +355,7 @@ rotation = -1.5708
 scale = Vector2(0.1, 0.2)
 texture = ExtResource("2_d3rus")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer"]
+[node name="OverlapPolygon" type="CollisionPolygon2D" parent="RoomLayer"]
 visible = false
 polygon = PackedVector2Array(92, -695, 101, -167, -289, -167, -291, 35, -826, 21, -753, 164, -292, 157, -289, 418, 94, 411, 90, 913, 227, 911, 221, 419, 549, 413, 558, 144, 1067, 160, 1042, 34, 549, 23, 551, -168, 220, -168, 234, -661, 152, -636)
 
@@ -414,5 +417,72 @@ shape = SubResource("CircleShape2D_ufixt")
 [node name="CameraTarget" type="Node2D" parent="RoomLayer"]
 position = Vector2(141, 120)
 
+[node name="Doors" type="Node2D" parent="RoomLayer"]
+
+[node name="Door" type="StaticBody2D" parent="RoomLayer/Doors"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Doors/Door"]
+position = Vector2(159, -139.5)
+shape = SubResource("RectangleShape2D_0im8v")
+
+[node name="DoorAreaUnlock" type="Area2D" parent="RoomLayer/Doors/Door"]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RoomLayer/Doors/Door/DoorAreaUnlock"]
+position = Vector2(161, -197)
+shape = SubResource("RectangleShape2D_0im8v")
+
+[node name="Door2" type="StaticBody2D" parent="RoomLayer/Doors"]
+position = Vector2(-329, 99)
+rotation = -1.61577
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Doors/Door2"]
+shape = SubResource("RectangleShape2D_0im8v")
+
+[node name="DoorAreaUnlock2" type="Area2D" parent="RoomLayer/Doors/Door2"]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RoomLayer/Doors/Door2/DoorAreaUnlock2"]
+position = Vector2(3.56168, -56.8974)
+rotation = 0.0829897
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_0im8v")
+
+[node name="Door3" type="StaticBody2D" parent="RoomLayer/Doors"]
+position = Vector2(560, 91)
+rotation = -4.73816
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Doors/Door3"]
+shape = SubResource("RectangleShape2D_0im8v")
+
+[node name="DoorAreaUnlock3" type="Area2D" parent="RoomLayer/Doors/Door3"]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RoomLayer/Doors/Door3/DoorAreaUnlock3"]
+position = Vector2(3.56168, -56.8974)
+rotation = 0.0829897
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_0im8v")
+
+[node name="Door4" type="StaticBody2D" parent="RoomLayer/Doors"]
+position = Vector2(169, 517)
+rotation = 3.08908
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomLayer/Doors/Door4"]
+shape = SubResource("RectangleShape2D_0im8v")
+
+[node name="DoorAreaUnlock4" type="Area2D" parent="RoomLayer/Doors/Door4"]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RoomLayer/Doors/Door4/DoorAreaUnlock4"]
+position = Vector2(3.56168, -56.8974)
+rotation = 0.0829897
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_0im8v")
+
 [connection signal="body_entered" from="RoomLayer/Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_entered" from="RoomLayer/Area2D" to="RoomLayer/Area2D" method="_on_body_entered"]
+[connection signal="body_entered" from="RoomLayer/Doors/Door/DoorAreaUnlock" to="." method="_on_door_area_unlock_body_entered"]
+[connection signal="body_exited" from="RoomLayer/Doors/Door/DoorAreaUnlock" to="." method="_on_door_area_unlock_body_exited"]
+[connection signal="body_entered" from="RoomLayer/Doors/Door2/DoorAreaUnlock2" to="." method="_on_door_area_unlock_2_body_entered"]
+[connection signal="body_exited" from="RoomLayer/Doors/Door2/DoorAreaUnlock2" to="." method="_on_door_area_unlock_2_body_exited"]
+[connection signal="body_entered" from="RoomLayer/Doors/Door3/DoorAreaUnlock3" to="." method="_on_door_area_unlock_3_body_entered"]
+[connection signal="body_exited" from="RoomLayer/Doors/Door3/DoorAreaUnlock3" to="." method="_on_door_area_unlock_3_body_exited"]
+[connection signal="body_entered" from="RoomLayer/Doors/Door4/DoorAreaUnlock4" to="." method="_on_door_area_unlock_4_body_entered"]
+[connection signal="body_exited" from="RoomLayer/Doors/Door4/DoorAreaUnlock4" to="." method="_on_door_area_unlock_4_body_exited"]

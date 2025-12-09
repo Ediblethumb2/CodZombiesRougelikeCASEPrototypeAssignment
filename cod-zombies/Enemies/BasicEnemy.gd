@@ -3,7 +3,7 @@ const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 @export var Goal: Node =null
 @export var Spawn: Node = null
-@export var  MovementSpeed = 400
+@export var  MovementSpeed = 300
 var ViewAngleDegrees = 90
 var TILE_SIZE = 64
 @export var BaseKillMoney: int = 5
@@ -90,9 +90,12 @@ func HealthMultiplier():
 	
 		
 var can_see = null
-
+var PrevHealth = 100
 func _physics_process(delta: float) -> void:
-
+	if PrevHealth != Health:
+		PrevHealth = Health
+		Goal = Player
+		Chasing = true
 	if Health <= 0 && State == ""	||Health <= 0 && State != "Death" :
 		
 		State = "Death"
@@ -115,10 +118,14 @@ func _physics_process(delta: float) -> void:
 	
 		
 		
-
+	if Player.Health <= 0:
+		set_physics_process(false)
+		return
 
 	if can_see || Chasing == true:
-
+		if Goal == Player:
+			if $NavigationAgent2D.is_target_reachable() == false:
+				Goal = Spawn
 		if not OnlyOnceTimer:
 			OnlyOnceTimer = true
 			$Timer.autostart = true
@@ -127,10 +134,10 @@ func _physics_process(delta: float) -> void:
 			Chasing = true
 
 
-
+	
 		if get_meta("Fast") == true and OnlyOnce == false:
 			OnlyOnce = true
-			MovementSpeed = 800
+			MovementSpeed = 400
 			$RichTextLabel.text = "Fast"
 			KillMoney *= 2
 

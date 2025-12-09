@@ -88,7 +88,7 @@ shader_parameter/aura_strength = 0.35
 position = Vector2(-454, 74)
 script = ExtResource("1_dtqjt")
 KnifeCooldown = 0.5
-Dosh = 100000000
+Dosh = 100
 metadata/NoFog = false
 metadata/Shop = false
 
@@ -267,8 +267,24 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("11_3tkgg")
 text = "GAME OVER"
 
+[node name="InteractLabelEnter" type="Label" parent="CanvasLayer2"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = 253.0
+offset_right = 78.0
+offset_bottom = 276.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "INTERACT TO ENTER"
+
 [node name="GameOver" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("12_l6ohk")
+volume_db = -10.0
 
 [node name="Owch!" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_oudfo")

@@ -14,7 +14,7 @@ func KnifeCooldownFunc():
 	if KnifeUsed == true:
 		await get_tree().create_timer(KnifeCooldown).timeout
 		KnifeUsed = false	
-		
+@export var CanUnlock = false		
 @export var Dosh = 1000
 @export var Equipped = 	""
 var LastEquipped = ""
@@ -155,7 +155,7 @@ var SlidingOnce = false
 var SlideCooldown = false
 var SlotUsing = 0 
 var  sliding = false
-
+@export var UnlockableDoor = null
 func _swing_knife() -> void:
 	Knife.Enabled = true
 	Knife.visible = true
@@ -194,7 +194,9 @@ func _input(event: InputEvent) -> void:
 		
 		
 		
-
+	if CanUnlock == true && event.is_action_pressed("Interact"):
+		UnlockableDoor.get_parent().get_parent().get_parent().StartSpawning()
+		
 
 		
 	
@@ -309,7 +311,10 @@ func SlideCOoldownDelay(timeout):
 var gun = "a"
 var PrevHealth = 100
 func _physics_process(delta: float) -> void:
-
+	if CanUnlock == true:
+		$CanvasLayer2/InteractLabelEnter.visible = true
+	else:
+		$CanvasLayer2/InteractLabelEnter.visible = false
 	if Equipped != "":
 		$CanvasLayer/WeaponUI.text = Equipped
 		
@@ -344,6 +349,9 @@ func _physics_process(delta: float) -> void:
 		$CanvasLayer2/RichTextLabel.visible = true
 		get_tree().current_scene.OnPlayerDied(global_position)
 		$PlrCam.enabled = false
+		set_physics_process(false)
+		return
+		
 	var results: Array = space_state.intersect_point(params, 1)
 	
 	var hovered = null

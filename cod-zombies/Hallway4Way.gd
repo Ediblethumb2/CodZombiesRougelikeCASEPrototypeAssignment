@@ -15,6 +15,7 @@ var ELITE_MODS := {
 		},
 
 }
+var Spawned = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 		set_process(false)
@@ -26,6 +27,7 @@ var Count = 0
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	
+		
 	if onlyonce == false && $RoomLayer.has_meta("Budget"):
 		
 		
@@ -35,7 +37,7 @@ func _process(delta: float) -> void:
 	
 		if $RoomLayer.get_meta("Budget") < 4:
 			AppliedMod = false 
-			set_process(false)
+		
 			print("ssdhsfhuife")
 		EnemyNames.shuffle()
 		Modnames.shuffle()
@@ -81,7 +83,11 @@ func _process(delta: float) -> void:
 						
 					break
 					
-				
+	if Spawned == true && 	get_tree().current_scene.get_node("Enemy").get_children().size() == 0:
+		for door in $RoomLayer/Doors.get_children():
+			door.queue_free()
+			set_process(false)
+					
 	
 		 
 		
@@ -89,7 +95,85 @@ func _process(delta: float) -> void:
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
+		await get_tree().create_timer(2.0).timeout
 		set_process(true)
+		Spawned = true
 
 	
-			
+var SelectedDoor = null		
+var Player = null
+
+
+
+func _on_door_area_unlock_body_entered(body: Node2D) -> void:
+	if body.name == "Player":
+		Player = body
+		body.CanUnlock = true
+	
+		SelectedDoor = $RoomLayer/Doors/Door
+		body.UnlockableDoor =  $RoomLayer/Doors/Door
+		 
+		
+func StartSpawning():
+	
+	Player.global_position  = $RoomLayer/CameraTarget.global_position
+	
+func _on_door_area_unlock_body_exited(body: Node2D) -> void:
+	if body.name == "Player":
+		body = Player
+		body.CanUnlock = false
+		SelectedDoor = null
+		body.UnlockableDoor = null
+
+
+func _on_door_area_unlock_2_body_entered(body: Node2D) -> void:
+		if body.name == "Player":
+			Player = body
+			body.CanUnlock = true
+	
+			SelectedDoor = $RoomLayer/Doors/Door2
+			body.UnlockableDoor =  $RoomLayer/Doors/Door2
+
+
+func _on_door_area_unlock_2_body_exited(body: Node2D) -> void:
+	if body.name == "Player":
+		body = Player
+		body.CanUnlock = false
+		SelectedDoor = null
+		body.UnlockableDoor = null
+
+
+func _on_door_area_unlock_3_body_entered(body: Node2D) -> void:
+		if body.name == "Player":
+			Player = body
+			body.CanUnlock = true
+	
+			SelectedDoor = $RoomLayer/Doors/Door3
+			body.UnlockableDoor =  $RoomLayer/Doors/Door3
+
+
+
+func _on_door_area_unlock_3_body_exited(body: Node2D) -> void:
+	
+	if body.name == "Player":
+		body = Player
+		body.CanUnlock = false
+		SelectedDoor = null
+		body.UnlockableDoor = null
+
+
+func _on_door_area_unlock_4_body_entered(body: Node2D) -> void:
+		if body.name == "Player":
+			Player = body
+			body.CanUnlock = true
+	
+			SelectedDoor = $RoomLayer/Doors/Door4
+			body.UnlockableDoor =  $RoomLayer/Doors/Door4
+
+
+func _on_door_area_unlock_4_body_exited(body: Node2D) -> void:
+	if body.name == "Player":
+		body = Player
+		body.CanUnlock = false
+		SelectedDoor = null
+		body.UnlockableDoor = null

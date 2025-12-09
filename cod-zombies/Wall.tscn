@@ -2322,7 +2322,7 @@ rotation = -1.5708
 scale = Vector2(0.1, 0.2)
 texture = ExtResource("1_l6igm")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer"]
+[node name="OverlapPolygon" type="CollisionPolygon2D" parent="RoomLayer"]
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 z_index = 6

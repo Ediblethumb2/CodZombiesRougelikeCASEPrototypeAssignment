@@ -350,7 +350,7 @@ rotation = -1.5708
 scale = Vector2(0.1, 0.2)
 texture = ExtResource("3_axjh2")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomLayer"]
+[node name="OverlapPolygon" type="CollisionPolygon2D" parent="RoomLayer"]
 visible = false
 polygon = PackedVector2Array(150, -375, 160, -132, -219, -118, -224, 96, -443, 87, -417, 231, 368, 225, 378, -118, 276, -124, 285, -345, 222, -324)
 
