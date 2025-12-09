@@ -768,7 +768,7 @@ func FillMap() -> bool:
 		
 				
 var Attempts = 0
-var MaxAttempts = 10000
+var MaxAttempts = 1000
 
 						
 func _to_cell(world_pos: Vector2) -> Vector2i:
@@ -797,14 +797,17 @@ func _process(delta: float) -> void:
 		return
 
 # Phase 1: main room filling
-	if SuccessfulRooms < 400:
+	if SuccessfulRooms < 100:
 		if not _has_any_free_connector():
 			main_phase_done = true
-			return
+			get_tree().reload_current_scene()
+			
 
 		var placed = await FillMap()
 		if placed == false:
 			Attempts += 1
+			
+		
 		if Attempts >= MaxAttempts:
 			get_tree().reload_current_scene()
 	else:
