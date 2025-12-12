@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://ddxxgige67krh"]
 
-[ext_resource type="Script" uid="uid://djf7urpn3x0qx" path="res://Map2.gd" id="1_gipgj"]
+[ext_resource type="Script" uid="uid://djf7urpn3x0qx" path="res://Scripts/Map2.gd" id="1_gipgj"]
 [ext_resource type="PackedScene" uid="uid://cux2yq5vrwnck" path="res://Player.tscn" id="1_ql6pm"]
-[ext_resource type="PackedScene" uid="uid://cdbpvj4aiv3yy" path="res://Hallway4Way.tscn" id="2_k8vv2"]
-[ext_resource type="Script" uid="uid://38xvy7s1djc8" path="res://LoadingScreen.gd" id="6_rpcyw"]
-[ext_resource type="Script" uid="uid://tb5sfwhpbwuu" path="res://FogOfWar.gd" id="6_xh7kc"]
+[ext_resource type="PackedScene" uid="uid://cdbpvj4aiv3yy" path="res://ProcGenAssets/Hallway4Way.tscn" id="2_k8vv2"]
+[ext_resource type="Script" uid="uid://38xvy7s1djc8" path="res://Scripts/LoadingScreen.gd" id="6_rpcyw"]
+[ext_resource type="Script" uid="uid://tb5sfwhpbwuu" path="res://Scripts/FogOfWar.gd" id="6_xh7kc"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_gipgj")

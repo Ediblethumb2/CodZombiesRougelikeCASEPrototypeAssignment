@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cxqssuobw4u6t"]
 
-[ext_resource type="Script" uid="uid://clwdx1lj0srpv" path="res://ExtraDamageCard.gd" id="1_4mmv1"]
+[ext_resource type="Script" uid="uid://clwdx1lj0srpv" path="res://Scripts/ExtraDamageCard.gd" id="1_4mmv1"]
 [ext_resource type="Texture2D" uid="uid://o62snmhpk3ba" path="res://Gun,CardSprites/ExtraDamageSprite.png" id="2_v47dq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jpu0a"]

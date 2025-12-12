@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://ciaves0vvj80b"]
 
-[ext_resource type="Script" uid="uid://dxu4dwg06wgr2" path="res://knife.gd" id="1_8wt88"]
+[ext_resource type="Script" uid="uid://dxu4dwg06wgr2" path="res://Scripts/knife.gd" id="1_8wt88"]
 [ext_resource type="Texture2D" uid="uid://lx56glp4curd" path="res://cs__go_counter_terrorist_knife_sprite_by_marksman_hq_dbziszl-200h.png" id="2_s4gn3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qjenl"]
